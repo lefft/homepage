@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>deck: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-silver-green">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="9d3611217f996dddec20f68f71309235"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="9b6e53aa0ccb4602f58cec6db701ab48">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>last time...</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 941px; left: 0px; top: 136px;" data-block-id="88912b37418a1ddf3e6038809ce57033">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 125%;">
+<p style="text-align:left">we looked at some simple, low-level computational models of parsing:</p>
+
+<ul>
+	<li style="text-align:left">purely top-down and purely bottom-up strategies</li>
+	<li style="text-align:left">hybrid <strong>left-corner</strong> parsing technique seems to align with human intuitions of processing difficulty</li>
+</ul>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 736px; left: 0px; top: 490px;" data-block-id="e09e8857ea554700a385f3500f7ed6d8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 125%;">
+<p style="text-align:left"><span style="color:#008000"><strong>today:</strong></span></p>
+
+<p style="text-align:left">    we examine key theoretical debates           and models in sentence processing;           syntactic <em>and</em> semantic considerations</p>
+</div></div></section><section data-id="140667d48fa57f655faf82711b8755c1"><div class="sl-block" data-block-type="text" style="width: 800px; left: 81px; top: 0px; height: auto;" data-block-id="99222097c0d8e06b8d1a389ac40ec4a2">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(4, 115, 17);">
+<h2>agenda for today (Tues.)</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 120px;" data-block-id="4a4903d83e3c49afc73bbb484ce2d59e">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ol>
+	<li style="text-align:left">experimental paradigms in sentence processing               (interleaved throughout)<br>
+	 </li>
+	<li style="color:rgb(17, 17, 17); text-align:left">The Garden Path Theory (Frazier et al.)<br>
+	 </li>
+	<li style="text-align:left">competing models of sentence processing<br>
+	&gt;&gt; serial/parallel<br>
+	&gt;&gt; modular/interactive<br>
+	&gt;&gt; single- or multi-stage<br>
+	 </li>
+	<li style="text-align:left">the semantic side of sentence processing<br>
+	&gt;&gt; factors that affect processing difficulty<br>
+	&gt;&gt; reading versus verbal comprehension</li>
+</ol>
+</div>
+</div></section><section data-id="49935f7e96c63dbdad8f43cfbcc5fc28"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-block-id="e51a34e0b7c20415c0219dc5d59bfbd1">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>theories of sentence processing</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 103px;" data-block-id="b6dd6eeb2aa69b6613166f720a30e047">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 110%;">
+<p style="text-align:left">motivating observations:</p>
+
+<ul>
+	<li style="text-align:left">there are fast and slow cognitive systems</li>
+	<li style="text-align:left">sentence processing appears to be one of the fast systems</li>
+	<li style="text-align:left">we know that fast systems are error-prone and based on shallow, imperfect heuristics</li>
+</ul>
+</div>
+</div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 791px; height: 233.345px; left: 42px; top: 342px;" data-block-id="0be750af311481e673a4b94c5c54103f"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="0"><img data-natural-width="1600" data-natural-height="472" data-src="deck/3157962-linda-bank-teller.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 0px; top: 607px;" data-block-id="1e4323f9b85ca501d0978f54c4b35246"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; border-style: solid; border-width: 4px; padding: 4px; border-radius: 9px; border-color: rgb(4, 115, 17);" data-fragment-index="2">
+<p style="text-align:left"><strong>garden path effects show that the sentence processor is also error-prone</strong></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 578px; left: 160px; top: 395px;" data-block-id="f0f50d4ab53138c63e73967769e68c1c"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 150%;" data-fragment-index="1">
+<p><strong>85%* say 2. is more likely</strong><span style="color:#FF0000"><strong> (wrong!)</strong></span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 304px; left: 648px; top: 654px;" data-block-id="aec03926a6bfb201d3b1fc71c5cf2c53"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 50%;" data-fragment-index="1">
+<p style="text-align:left">*...of participants in an experiment from</p>
+
+<p style="text-align:left">Tversky &amp; Kahneman (1983)</p>
+</div></div></section><section data-id="fdb2a60ed131a7624d268bbf6e35e0a0"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-block-id="fe9d9abf8369eb42537a5ebf7e21ad4b">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>theories of sentence processing</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 719px; left: 1px; top: 140px;" data-block-id="685508a305d63bff977564c12b138e98"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; color: rgb(4, 115, 17);">
+<p style="text-align:left"><span style="color:#000000">considerations like these led to development of</span> <strong>The Garden Path Theory</strong> <span style="color:#000000">of sentence processing</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 959px; left: 0px; top: 247px;" data-block-id="34697207e4aef35f92ecd09b8464486d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 95%;">
+<p style="text-align:left">key tenets of The Garden Path Theory:</p>
+
+<ul>
+	<li>parsing is <span style="color:#006400"><strong>serial</strong></span> -- we consider one candidate structure at a time</li>
+	<li>parsing is <span style="color:#006400"><strong>modular</strong></span> -- only syntactic information is available to guide the initial parse (no semantic/contextual considerations)</li>
+	<li>there are <span style="color:#006400"><strong>two stages</strong></span> of parsing -- initial parse is fast and blind, second stage evaluates parse w/outside info (reanalysis needed?)</li>
+	<li>initial parse is guided by <strong><span style="color:#006400">heuristics</span> </strong>-- shallow rules of thumb meant to speed up processing (but fallible)</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 420px; left: 527px; top: 601px;" data-block-id="5e75ab5065fcb352759f2eb01cf2c5ab"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 70%; color: rgb(136, 136, 136);">
+<p style="text-align: right;">recall whole-object bias, mutual exclusivity assumption from Markman (1992) -- these are heuristics for word learning</p>
+</div></div></section><section data-id="34375025df7e513e706915767ea64fb0"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="9b85721eb6de4ca51cbbfd9e86a8874c">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>The Garden Path Theory</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 880px; left: 0px; top: 136px;" data-block-id="ccf8a3a03f9b0e02d57f16417ff61ba2">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 125%;">
+<p style="text-align:left">two important parsing heuristics</p>
+
+<ul>
+	<li style="text-align:left">
+<strong><span style="color:#006400">late closure</span>: </strong>integrate incoming words into the constituent being built (not previous ones)</li>
+	<li style="text-align:left">
+<strong><span style="color:#006400">minimal attachment</span>: </strong>assume the "simplest" structure compatible with the input</li>
+</ul>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 960px; left: 0px; top: 420px;" data-block-id="5c411b98de79c3db42a5f11b25960a27"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p style="text-align:left">what do these heuristics predict about...</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"><em>Since Jay always runs a mile and a half is nothing to him.</em></p>
+
+<p style="text-align:left"><em>Being as smart as she is, of course Mary knew the answer was wrong.</em></p>
+
+<p style="text-align:left"><em>The dangerous poacher shot at the lion with the scars. </em></p>
+
+<p style="text-align:left"><em>The horse raced past the barn fell. </em></p>
+</div></div></section><section data-id="045faa138f5abdb5a5a53641a1fb20ef"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="218b5d86df9efe7b6c369b2743ef57fe">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>The Garden Path Theory</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 122px;" data-block-id="0948cfdb8223dc06652b27ea613bd87b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 80%;">
+<p style="text-align:left"><em>Since Jay always runs a mile and a half <strong>is nothing</strong> to him.</em></p>
+
+<p style="text-align:left"><em>Being as smart as she is, of course Mary knew the answer <strong>was wrong</strong>.</em></p>
+
+<p style="text-align:left"><em>The dangerous poacher shot at the lion with <strong>the scars</strong>. </em></p>
+
+<p style="text-align:left"><em>The horse raced past the barn <strong>fell</strong>. </em></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 856px; left: 0px; top: 335px;" data-block-id="79fcb87b536e8a45e36bf78d32256763"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p style="text-align:left">evidence of reading difficulty in the critical regions (of a wide variety of these kinds of sentences) interpreted as evidence that people use <span style="color:#006400">late closure</span> and <span style="color:#006400">minimal attachment</span> as guiding principles for the initial pass at a sentence</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 340px; top: 549px;" data-block-id="6195de172e718cab5d8bf71a281b94f6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; border-style: solid; border-width: 4px; padding: 4px; border-radius: 9px; border-color: rgb(4, 115, 17);" dir="ui">
+<p><strong>GPT offers an intuitive explanation of why we backtrack and how we are able to process sentences so fast</strong></p>
+</div></div></section><section data-id="18308a445cd22fbbb6232991a094cec9"><div class="sl-block" data-block-type="text" style="width: 902px; left: 30px; top: 0px; height: auto;" data-block-id="38144b52ea210bf0c48d0334f6635cc0">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>methodology in sentence proc.</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 840px; left: 0px; top: 106px;" data-block-id="8154117bc23df283e3540533fd8c9cbb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align: left;"><strong>some important questions: </strong></p>
+
+<p style="text-align: left;">&gt;&gt; so how do you measure "processing difficulty" anyway?!</p>
+
+<p style="text-align: left;">&gt;&gt; how do we know when someone backtracks??</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 575px; left: 0px; top: 280px;" data-block-id="938f2fa5cded08fa7fb0c21340c16d64"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p style="text-align:left"><span style="font-size:0.9em">the answers will depend on whether we're studying reading or verbal comprehension</span><br>
+ </p>
+
+<p style="text-align:left"><span style="font-size:0.9em">early research in sentence processing mostly studied reading, via</span></p>
+
+<ul>
+	<li style="text-align:left"><span style="font-size:0.9em">self-paced reading [<a href="https://www.youtube.com/watch?v=3XZrCxmw8zU" target="_blank">link</a>] (moving window)</span></li>
+	<li style="text-align:left"><span style="font-size:0.9em">self-paced reading (word-by-word)</span></li>
+	<li style="color:rgb(17, 17, 17); text-align:left"><span style="font-size:0.9em">eye-tracking during reading [<a href="https://www.youtube.com/watch?v=VBTZNydUh0w" target="_blank">link</a>]</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 368px; left: 584px; top: 323px;" data-block-id="4ad119ceee1d6af1d15ef4b65ff2c34a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 75%; padding: 4px; border-style: solid; border-width: 4px; border-radius: 9px; border-color: rgb(4, 115, 17);">
+<p style="text-align:left">dependent measures can be:</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"><strong>&gt;&gt; reading time</strong> (RT) at some            critical region of interest (ROI);</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"><strong>&gt;&gt; regressions </strong>(right-to-left);</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"><strong>&gt;&gt; fixation time</strong> per saccade;<br>
+ </p>
+
+<p style="text-align:left"><strong>&gt;&gt; accuracy</strong> on comprehension         questions, and others</p>
+</div></div></section><section data-id="3b99c40ba5fcfbbc22e9e99a34449fc0"><div class="sl-block" data-block-type="text" style="height: auto; width: 897px; left: 8px; top: 88px;" data-block-id="ec3e828e4050f364175ed8c6edf73424"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10;">
+<p style="text-align:left">consider the following sentences:</p>
+
+<p style="text-align:left"> </p>
+
+<p><em>  The dog walked to the park wagged its tail happily.</em></p>
+
+<p><em>The treasure buried in the sand was never found.</em></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 620px; left: 20px; top: 524px;" data-block-id="d9d9eb77f057694c8f5d172c030a2774"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-fragment-index="1">
+<p style="text-align: left;">the observation that garden pathing can be sensitive to non-syntactic information is the primary evidence for so-called <strong>constraint-based theories </strong>of sentence processing </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 550px; left: 385px; top: 328px;" data-block-id="9a8d1316bdd83877712c76a7cd9598bb"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; padding: 4px; border-style: solid; border-width: 4px; border-radius: 9px; border-color: rgb(4, 115, 17); font-size: 90%;" data-fragment-index="0">
+<p style="text-align: left;"><span style="color:rgb(17, 17, 17)">GPT predicts that </span><em>all</em><span style="color:rgb(17, 17, 17)"> sentences with dispreferred structures should lead to processing lags (and should do so equally)</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 942px; left: 8px; top: 0px; height: auto;" data-block-id="2bd082129af2969250421e0d59741b5f">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 14; color: rgb(4, 115, 17); font-size: 85%;">
+<h2>some problems for a modular theory</h2>
+</div>
+</div></section><section data-id="bf0f54a62be171e467859ec0ddf85a26"><div class="sl-block" data-block-type="text" style="width: 902px; left: 29px; top: 0px; height: auto;" data-block-id="d632068f93c010ddd89d919a89d7966b">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 12; color: rgb(4, 115, 17);">
+<h2>constraint-based approaches</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 700px; left: 250px; top: 601px;" data-block-id="a4ae2d3df02001b4be57cf5a40660c02"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 70%;">
+<p><strong>note: </strong>"constraint-based approach" often used as a catch-all ("catch-<em>most</em>"?!) term for processing models opposed to the GPT</p>
+
+<p>MacDonald; Trueswell; Chambers; Tanenhaus; others. (1990s--present)</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 826px; left: 0px; top: 101px;" data-block-id="376fcb862c1827e6e1055f40b3578475"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p style="text-align:left">key tenets of (some) <span style="color:#006400"><strong>constraint-based theories </strong></span><br>
+<span style="color:#000000">of sentence processing:</span></p>
+
+<p style="text-align:left"> </p>
+
+<ul>
+	<li style="color:rgb(17, 17, 17)">
+<span style="color:#006400"><strong>interactive</strong></span> -- diverse kinds of information accessed during parsing</li>
+	<li style="color:rgb(17, 17, 17)">
+<span style="color:#006400"><strong>parallel</strong></span> -- more than one structure considered simultaneously (with varying degrees of activation)</li>
+	<li style="color:rgb(17, 17, 17)">
+<span style="color:#006400"><strong>single-stage</strong></span> -- brute-force, "everything but the kitchen sink" approaches (world knowledge, context, statistical learning of frequencies/co-occurrences/etc.) </li>
+</ul>
+</div></div></section><section data-id="d6c815eeba91e9d3cb115e2cb112fcea"><div class="sl-block" data-block-type="text" style="width: 902px; left: 29px; top: 0px; height: auto;" data-block-id="1260916cea9e39ae2cd808cdf08f451c">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>constraint-based approaches</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 893px; left: 0px; top: 127px;" data-block-id="f46ae25087a3fc0a92921eae271ab571"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:left">a nice example -- <span style="color:#006400"><strong>syntactic priming</strong></span><strong>*</strong></p>
+
+<p style="text-align:left">      <em>obtain</em> --&gt; NP bias</p>
+
+<p style="color:rgb(17, 17, 17); text-align:left"><em>      accept</em> --&gt; NP bias</p>
+
+<p style="color:rgb(17, 17, 17); text-align:left"><em>      realize</em> --&gt; S bias </p>
+
+<p style="color:rgb(17, 17, 17); text-align:left"> </p>
+
+<p style="color:rgb(17, 17, 17); text-align:left">Trueswell &amp; Kim (1998): subconscious exposure to S-bias verb or NP-bias verb prior to seeing main verb in sentence</p>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 19px; height: 78px; left: 301px; top: 511px;" data-block-id="a30eb39d03b1007c979f7bb967289d6a"><div class="sl-block-content" data-shape-type="arrow-up" data-shape-fill-color="#000000" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 19 79"><polygon points="9.5,0 19,39.5 13.299999999999999,39.5 13.299999999999999,79 5.7,79 5.7,39.5 0,39.5 9.5,0" class="shape-element" fill="#000000"></polygon></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 276.5px; left: 203px; top: 598px;" data-block-id="3fc82ca06b9c156c0e091fae328cc6ee"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 65%; line-height: 1.04;" data-has-line-height="">
+<p>39ms of <strong><em>obtained</em></strong> or <strong><em>realized</em></strong><br>
+ </p>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 907px; left: 17px; top: 475px;" data-block-id="7d0cfc53177d810913b6001c78cdcea9"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 110%;">
+<p style="color:rgb(17, 17, 17)"><strong><em>The photographer accepted the fire could not be put out.</em></strong></p>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 365px; left: 559px; top: 580px;" data-block-id="47175dc2b94a5b66dbab629ed6bac592"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; padding: 4px; border-style: solid; border-width: 4px; border-radius: 9px; border-color: rgb(4, 115, 17); font-size: 110%;">
+<p><span style="font-size:0.9em"><span style="color:rgb(17, 17, 17)">faster reading time when primed w </span><em>realized</em></span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 333.5px; left: 9px; top: 655px;" data-block-id="2e8bd92044727c8adabd322646d489ef"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17;">
+<p><span style="font-size:0.5em"><span style="font-size:1.2em">*</span>fits nicely with the idea of parallel processing</span></p>
+</div></div></section><section data-id="268fef6d05fa403c2b84be2ca89b16d0"><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 960px; left: 0px; top: 87px;" data-block-id="b8a2903e18faddc5e80062da6ab9016f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:left">several kinds of information seem to affect processing difficulty</p>
+
+<ul>
+	<li class="fragment" data-fragment-index="0">
+<span style="color:#006400">syntactic subcategorization <span style="text-align:left">frame</span></span><br>
+	<span style="color:rgb(17, 17, 17); text-align:left"><span style="font-size:0.7em"><em>The treasure/pirate buried/put/left in the sand was lost forever.</em></span></span>
+</li>
+	<li class="fragment" data-fragment-index="1">
+<span style="color:#006400">frequency of competing structures</span><br>
+	<span style="font-size:0.7em"><strong>question: </strong>relative frequency of reduced RC versus main verb construction?</span>
+</li>
+	<li class="fragment" data-fragment-index="2">
+<span style="color:#006400">syncretism in morphology</span><br>
+	<span style="font-size:0.7em"><em>The horse raced past the barn fell.    The horse ridden past the barn fell.<br>
+	race ~ raced ~ raced </em>(regular)<em>             ride ~ rode ~ ridden </em>(irregular)</span>
+</li>
+	<li class="fragment" data-fragment-index="3">
+<span style="color:#006400">lexical ambiguity</span><br>
+	<span style="font-size:0.7em"><em>The government plans to raise taxes were defeated. </em></span>
+</li>
+	<li class="fragment" data-fragment-index="4">
+<span style="color:#006400"><span style="font-size:1.0em">contextual information</span></span><br>
+	<span style="font-size:0.7em"><em>the horse that was walked past the barn was fine, but the horse raced past the barn fell.</em></span><br>
+	 </li>
+	<li class="fragment" data-fragment-index="5"><span style="color:#006400">interactions between <strong>frequency </strong>and all of these things!</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-block-id="ea0f07f53e55776097c7fd0b997b9278">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 13; color: rgb(4, 115, 17); font-size: 90%;">
+<h2>adjudicating between the theories</h2>
+</div>
+</div></section><section data-id="dc70806625bb0dcc9f4aa0c12f71af01"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="0ad927fe0db61539a314204f49dc1944">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>from reading to listening</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 793px; left: 0px; top: 91px;" data-block-id="3f4ae3b4edb41201550642b9fa045758"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:left"><span style="color:rgb(17, 17, 17)">so far we've been theorizing on the basis of reading studies -- reading studies carried out under non-typical circumstances</span></p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left">also: not all languages are written, so unclear degree to which these phenomena reflect linguistic processing independently of visual pattern recognition</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left">also: real-life linguistic behavior involves reference to language-external objects, but in reading everything is a piece of language</p>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 326px; top: 601px;" data-block-id="e111209abec64796429441738da1c5ce"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p><strong>question:</strong> how can we measure <em>auditory</em> language comprehension in real time?</p>
+</div></div></section><section data-id="7a0a158b33210049331af1e9f6d6e861"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="b83c270267d4340b5ff9bdf4364f3208">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>from reading to listening</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 937px; left: 0px; top: 113px;" data-block-id="ed780d8599616eb1a77790b5830af710"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:left"><strong>one answer:</strong> </p>
+
+<ol>
+	<li style="text-align:left">
+<span style="color:rgb(17, 17, 17); text-align:left">construct a mini-world containing collections of objects</span><br>
+	 </li>
+	<li style="text-align:left">selectively refer to those objects in auditory stimuli<br>
+	 </li>
+	<li style="text-align:left">manipulate properties of the stimuli <em>and</em> of the visual displays<br>
+	 </li>
+	<li style="text-align:left">measure eye-movements, looking times, or latencies to different visual objects across different experimental conditions<br>
+	 </li>
+	<li style="text-align:left">make inferences about how particular manipulations of linguistic stimulus and context affect processing time</li>
+</ol>
+</div></div></section><section data-id="6f562f491a872b364f54852ed1f07d9d"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="ea45e3f2a43f50f8209cec419e45c389">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>from reading to listening</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 416px; left: 455px; top: 123px;" data-block-id="e445cfa831ae5700b2b2cdd97e25dffb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 4px; padding: 4px; border-radius: 9px; border-color: rgb(4, 115, 17);">
+<p>this is the basic approach of <span style="color:#006400"><strong>the visual world paradigm</strong></span></p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 619px; height: 464.735px; left: 10px; top: 224px;" data-block-id="f0a43093c37d51b0c84437f8ed4c455d"><div class="sl-block-content" style="z-index: 14;"><img data-natural-width="638" data-natural-height="479" data-src="deck/3158276-vwp-russian-example.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 319px; left: 640px; top: 321px;" data-block-id="2bd634071c51728df442734c85f33a20"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 75%;">
+<ul>
+	<li>
+<span style="color:rgb(17, 17, 17)">method for studying incremental syntactic and semantic processing</span><br>
+	 </li>
+	<li><span style="color:rgb(17, 17, 17); text-align:left">made possible by the fact that people automatically, incrementally, and unconsciously try to relate visible objects in their surroundings to chunks of linguistic material</span></li>
+</ul>
+</div></div></section><section data-id="b601f9b775a476db1672a3612797da90"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="d45cea3fdbc1c776c524d7e3a4220400">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(4, 115, 17);">
+<h2>the visual world paradigm</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 767px; left: 63px; top: 280px;" data-block-id="1ce436d2b08cb71bce485871c9ae7844"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 150%;">
+<p><em>Put the apple on the towel in the box.</em></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 620px; left: 0px; top: 112px;" data-block-id="8587df7e426b64a2f78923c1a8a7df90"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 2px; padding: 4px; border-radius: 9px;">
+<p><strong>question: </strong>how do we know if someone                          has mis-analyzed this sentence?</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 337.819px; height: 227px; left: 610.181px; top: 465px;" data-block-id="9971ecf29c981e1073f342a90ad922ea"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="1"><img data-natural-width="1134" data-natural-height="762" data-src="deck/3158541-tanenhaus-apple2.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 360px; height: 226.105px; left: 7px; top: 465px;" data-block-id="beacf0e6b668b9de18e7944b56da0172"><div class="sl-block-content fragment" style="z-index: 14;" data-fragment-index="0"><img data-natural-width="1140" data-natural-height="716" data-src="deck/3158542-tanenhaus-apple1.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 352px; left: 0px; top: 420px;" data-block-id="053be40f7358826059374f5f19575698"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 80%;" data-fragment-index="0">
+<p>what about given this context?</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 652px; top: 420px;" data-block-id="b9435c11a8b840235daa04b814af0903"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; font-size: 80%;" data-fragment-index="1">
+<p>what about this one?</p>
+</div></div></section><section data-id="94201b0b1215b7de1b11de259219b5a7"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="311f01262e8f872c067d996ffe57a65c">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(4, 115, 17);">
+<h2>the visual world paradigm</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 470.58px; height: 558px; left: 0px; top: 96px;" data-block-id="f11e9b4e98f3523870b1dd108873534b"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="759" data-natural-height="900" data-src="deck/3158342-tanenhaus-vwp1.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 445.511px; height: 560px; left: 508px; top: 95px;" data-block-id="4f29ceabd9fb73cb02a2ca7698c3947d"><div class="sl-block-content" style="z-index: 13;"><img data-natural-width="716" data-natural-height="900" data-src="deck/3158343-tanenhaus-vwp2.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 360px; top: 661px;" data-block-id="d5c8f1bf4f4ed8bb34212a9a44f43944"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p>seminal study of Tanenhaus et al. (1995)</p>
+</div></div></section><section data-id="c1b46a9ed726225bd69e23ca281672a1"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="00fe46fdb9f6ccfb14874bdab6c4a365">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(4, 115, 17);">
+<h2>the visual world paradigm</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 205px; left: 749px; top: 103px;" data-block-id="1b08b75d110a7ff1b86b589341d57861"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 50%;">
+<p>Tanenhaus et al. (1995)</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 726.395px; height: 562px; left: 227px; top: 132px;" data-block-id="e42d9b3f6410b5a5fab7089d0c9a89c2"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="1140" data-natural-height="882" data-src="deck/3158341-tanenhaus-vwp-plot.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 219px; height: 259.684px; left: 0px; top: 125px;" data-block-id="7f6f4556aa87e8982004bbd30a305908"><div class="sl-block-content" style="z-index: 13;"><img data-natural-width="759" data-natural-height="900" data-src="deck/3158342-tanenhaus-vwp1.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 219px; height: 275.279px; left: 0px; top: 419px;" data-block-id="db8672a4f4666a4b69dd7f2cc6e508ed"><div class="sl-block-content" style="z-index: 14;"><img data-natural-width="716" data-natural-height="900" data-src="deck/3158343-tanenhaus-vwp2.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 205px; left: 7px; top: 93px;" data-block-id="483a3c77e9b55e7d5e7d32a371ac8ae1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 85%;">
+<p>one-referent</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 205px; left: 0px; top: 386px;" data-block-id="707802cb9a8043ed6f9a081d9b105714"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; font-size: 85%;">
+<p>two-referent</p>
+</div></div></section><section data-id="7589c1beb4af48c61af34fbac999a896"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="622910f57c923d01788d7545035f9788">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>the visual world paradigm</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 960px; left: 0px; top: 73px;" data-block-id="668052e7c682d7351c007c4a952a1425"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 90%;">
+<p style="text-align:left"><strong>Tanenhaus et al. (1995): </strong></p>
+
+<ul>
+	<li>contextual information is taken into account <em>incrementally</em>                          <br>
+	during on-line sentence processing</li>
+	<li>semantic information <span style="text-align:center">appears to be rapidly integrated </span><br>
+	<span style="color:rgb(17, 17, 17); text-align:left">(e.g. that </span><em>on the towel</em><span style="color:rgb(17, 17, 17)"> signals multiple apples</span><span style="color:rgb(17, 17, 17)">) </span>
+</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 464.28px; height: 438px; left: 495.72px; top: 260px;" data-block-id="a3a893a20e49849834e8fe0d01504c90"><div class="sl-block-content" style="z-index: 13;"><img data-natural-width="954" data-natural-height="900" data-src="deck/3158460-chambers-2004-fig.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 463px; left: 0px; top: 327px;" data-block-id="b4e9c28173087bea97a3a208a3399079"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 90%;">
+<p style="color:rgb(17, 17, 17); text-align:left"><strong><span style="text-align:center">Chambers et al. (2004)</span></strong></p>
+
+<ul style="color:rgb(17, 17, 17)">
+	<li>rapid integration of verb-specific<br>
+	world knowledge during on-line processing of temporarily ambiguous sentences</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 458px; left: 23px; top: 599px;" data-block-id="d06b02ad1c941e9b1b6c0ba63412fc3d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; padding: 4px; border-style: solid; border-width: 4px; border-radius: 9px; border-color: rgb(4, 115, 17);" dir="ui">
+<p><em>"pour the egg (that's) in the bowl over the flour"</em></p>
+</div></div></section><section data-id="a329cdde8142394865e1e7bbde818ed2"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 0px; height: auto;" data-block-id="3f80a6f498bea6fc5aac34bc1a1c5712">
+    <div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(4, 115, 17);">
+<h2>what's coming next...</h2>
+</div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 839px; left: 0px; top: 211px;" data-block-id="2e01e482aea44c78f388638014e38f35"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li style="text-align:left">look at some key experimental results in the semantic processing literature;<br>
+	 </li>
+	<li style="text-align:left">look further into how context can affect/guide sentence-level and word-level processing;<br>
+	 </li>
+	<li style="text-align:left">survey some evidence of <em>predictive processing</em>, from neuro-imaging and eye-tracking studies; and finally,<br>
+	 </li>
+	<li style="text-align:left">try to philosophize a bit about what all this tells us about the nature of language and human cognition in general</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 0px; top: 101px;" data-block-id="6ab14ba05688365a31ad01d8f29b5cdb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p style="text-align: left;">on Thursday, we will...</p>
+</div></div></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":833139,"slug":"deck","title":"deck","description":"","visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/101ddcf8950fec77b904946751ac595a/thumb.jpg","view_count":0,"user":{"id":595880,"username":"lefft","name":null,"description":null,"thumbnail_url":"https://www.gravatar.com/avatar/ee548c0d4b018f1ce5850e026524d574?s=140\u0026d=https%3A%2F%2Fs3.amazonaws.com%2Fstatic.slid.es%2Fimages%2Fdefault-profile-picture.png","pro":true,"team_id":null,"settings":{"id":441467,"present_controls":true,"present_upsizing":true,"present_notes":true}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"silver-green","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"should_loop":false,"share_notes":null,"slide_number":null,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":1,"data_updated_at":1477417708748,"font_typekit":null,"font_google":null,"notes":{}}};
+			SLConfig.current_user = {
+				name: "",
+				username: "lefft",
+				pro: true
+			};
+
+
+			// Use the local font path
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+		<script>
+			// Make Slides speaker notes available in the reveal.js speaker view
+			if( SLConfig.deck.notes ) {
+				[].forEach.call( document.querySelectorAll( '.reveal .slides section' ), function( slide ) {
+
+					var value = SLConfig.deck.notes[ slide.getAttribute( 'data-id' ) ];
+					if( value && typeof value === 'string' ) {
+						slide.setAttribute( 'data-notes', value );
+					}
+
+				} );
+			}
+
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+				showNotes: SLConfig.deck.share_notes,
+				slideNumber: SLConfig.deck.slide_number,
+
+				autoSlide: SLConfig.deck.auto_slide_interval || 0,
+				autoSlideStoppable: true,
+
+				rolling_links: SLConfig.deck.rolling_links || true,
+				center: SLConfig.deck.center || false,
+				loop: SLConfig.deck.should_loop || false,
+				rtl: SLConfig.deck.rtl || false,
+
+				transition: SLConfig.deck.transition,
+				backgroundTransition: SLConfig.deck.background_transition,
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>
