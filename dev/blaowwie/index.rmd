@@ -1,8 +1,5 @@
----
-title: "timothy leffel -- home"
----
 
-
+<p>
 blaowwie waowwie!
 
 bahbahboosh! :o
@@ -10,10 +7,15 @@ bahbahboosh! :o
 
 look here for ex of side nav: https://github.com/twbs/bootstrap/issues/13919
 
-<div>
+will want to look at this + corresponding stuff in html output
+
+</p>
+<!-- css: simple-sidebar.css -->
+
+<div class="w3-sidebar w3-bar-block" style="width:25%"> 
 <ul class="nav nav-pills nav-stacked">
-  <li role="presentation" class="active"><a href="#">Home</a></li>
-  <li role="presentation"><a href="#">Profile</a></li>
-  <li role="presentation"><a href="#">Messages</a></li>
+  <li role="navigation" class="active"><a href="#">Home</a></li>
+  <li role="navigation"><a href="#">Profile</a></li>
+  <li role="navigation"><a href="#">Messages</a></li>
 </ul>
 </div>
