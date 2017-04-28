@@ -1,3 +1,18 @@
+---
+output: html_document
+css: boosh.css
+---
+
+<nav>
+<div class="w3-sidebar w3-bar-block" style="width:25%"> 
+<ul class="nav nav-pills nav-stacked">
+  <li role="navigation" class="active"><a href="#">Home</a></li>
+  <li role="navigation"><a href="#">Profile</a></li>
+  <li role="navigation"><a href="#">Messages</a></li>
+</ul>
+</div>
+</nav>
+
 
 <p>
 blaowwie waowwie!
@@ -12,10 +27,17 @@ will want to look at this + corresponding stuff in html output
 </p>
 <!-- css: simple-sidebar.css -->
 
-<div class="w3-sidebar w3-bar-block" style="width:25%"> 
-<ul class="nav nav-pills nav-stacked">
-  <li role="navigation" class="active"><a href="#">Home</a></li>
-  <li role="navigation"><a href="#">Profile</a></li>
-  <li role="navigation"><a href="#">Messages</a></li>
-</ul>
-</div>
+
+
+<style type="text/css">
+
+* {
+  margin: 0;
+  padding: 0;
+  
+}
+
+
+
+</style>
+

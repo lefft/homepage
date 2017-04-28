@@ -5,6 +5,9 @@ render_site()
 render("index.rmd", html_document(toc = TRUE))
 
 rmarkdown::metadata
+
+# https://www.youtube.com/watch?v=71djHQlwjAc
+
 ## okay default nav:
 ## 
 # name: "timothy leffel -- homepage"
