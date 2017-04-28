@@ -1,0 +1,17 @@
+name: "timothy leffel -- homepage"
+css: simple-sidebar.css
+output_dir: "."
+navbar:
+  title: "timothy leffel"
+  left:
+    - text: "home"
+      href: index.html
+    - text: "about"
+      href: about.html
+    - text: "research"
+      href: research.html
+    - text: "bloggie"
+      href: bloggie.html
+    - text: "cv"
+      href: cv.html
+
