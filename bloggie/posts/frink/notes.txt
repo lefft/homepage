@@ -1,0 +1,59 @@
+
+
+
+
+
+intuition/summary
+~~~~~~~~~~~
+write a v short expt'al paper, display a paragraph at a time linearly to one group of turkers; display the same paper in the "onion" style to another group, ask them both comprehension q's and q's about did they find it convincing. hypothesis: for convincing papers, no diff; for unconvincing papers, onion subj's believe conclusions less. BUT hopefully would be no diff in level of understanding, regardless of whether paper is convincing.
+
+
+design
+~~~~~~~~~~~
+have ppl answer comp q's before moving on(?)
+(all at the end cd be bad -- ppl just flip thru; altho cd manipulate this too...)
+2x2 factorial design:
+	- format: sequential/traditional/linear vs onion
+	- quality: paper is overstated/sensationalized vs measured/conservative
+
+
+toy paper
+~~~~~~~~~~~
+claim:  computers can convince ppl that they're ppl
+expt:   100 ppl chat w a chatbot or person, have to decide if chatter is a person or bot
+result: 70% of ppl in bot condition said person; 90% of ppl in person cond said person
+
+questions (all mc?)
+~~~~~~~~~~~
+comp1: what was the author's main conclusion? [choices]
+comp2: the author measured whether ppl [enjoyed chatting w a person or bot better]
+comp3: the author found that [most ppl could distinguish btwn bot + person]
+comp4: the author's hypothesis was that [ppl cannot distinguish btwn bot + person]
+
+crit1: did the experiment prove the author's claim to be true?
+crit2: did the experiment provide evidence for the author's claim?
+crit3: do you believe the author's main claim is true?
+crit4: if this was real, would yr opinion abt author's claim change after reading?
+
+abstract/intro: 
+~~~~~~~~~~~~
+in the modern world, computers are becoming more human-like. however, it is not known whether people are actually convinced by the human-like behavior of computerized agents. in this paper, we prove that modern computers can fool people into thinking that they are actual people. 
+
+methods/materials: 
+~~~~~~~~~~~~
+200 people came into the lab. 100 of them chatted with a person in another room. 100 of them chatted with a chatbot, which is just a computer program designed to interact with ordinary people like another ordinary person. people were then asked if they believed they were chatting with a person or a computer.
+
+results: 
+~~~~~~~~~~~~
+among the people who chatted with a person, 60% believed that they were chatting with a person. among the people who chatted with a computer, 70% believed that they were chatting with a person.
+
+discussion: 
+~~~~~~~~~~~~
+our expt [demonstrated/provided evidence that] that modern computer technology is good enough at mimicking human behavior that it can fool people into thinking it is a human. specifically, people were more likely to believe that the chatbot was human than they were to believe that an actual person was human. this [suggests/proves beyond a shadow of a doubt] that 
+
+conclusion: 
+~~~~~~~~~~~~
+[no concl necessary?]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
