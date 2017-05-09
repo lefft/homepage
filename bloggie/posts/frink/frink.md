@@ -1,3 +1,23 @@
+lookup table: 
+	j(oystick) -- 1
+	g(ears)    -- 2
+	k(nob)     -- 3
+	s(witch)   -- 4
+	d(ice)     -- 5
+	r(ock)     -- 6
+
+priors: 
+	joystick, gears two highest; 
+	dice, rock two lowest; 
+	switch, knob in between
+
+first ten rolls fc: 
+	j k g k j k k j d k
+
+first ten rolls fd:
+
+
+
 
 
 ~~~~~~~~~~
@@ -126,3 +146,8 @@ intuition/summary of proj: write a v short expt'al paper, display a paragraph at
 i realize the irony that i'm explaining the motivation before presenting the study, but oh well. 
 
 shd all q's be multiple choice? (prob bc better for analysis)
+
+need to make clear connection early on to motivations -- reading papers linearly has risks of confirmation bias (if you agree w the author's perspective) or selective skepticism (if you don't)
+
+even knowing author's identity is prob not a good thing -- that's why peer review is double blind!
+
