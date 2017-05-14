@@ -12,6 +12,12 @@
     /*border: 1px solid grey;*/
 }
 
+
+#blaowwie {
+  padding-left: 0px;
+  /*text-align: left;*/
+}
+
 .myhr {
   border-color: green;
   opacity: .25;
@@ -78,6 +84,7 @@ h4 {
 .nav-header:after {
 content: "\00A0\25BE";
 }
+
 li > ul.tree {
   padding-left: 10px;
 }
