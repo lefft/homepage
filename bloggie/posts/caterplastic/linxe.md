@@ -1,5 +1,3 @@
-
-
 ##### list of linxe + sources! (lol)
 
 1. BGR, ["Nature throws humanity a softball, provides bugs that digest plastic"](http://bgr.com/2017/04/24/plastic-eating-bugs-wax-moth-pollution/)
@@ -56,7 +54,7 @@
 	
 
 19. Treehugger.com, ["Caterpillars that eat plastic bags discovered, could lead to pollution solution"](https://www.treehugger.com/animals/caterpillars-eat-plastic-bags-discovered-could-lead-pollution-solution.html) 
-	
+
 
 20. The New York Times, ["A Very Hungry Caterpillar Eats Plastic Bags, Researchers Say"](https://www.nytimes.com/2017/04/27/science/plastic-eating-caterpillar.html)
 

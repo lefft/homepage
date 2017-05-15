@@ -1,0 +1,9 @@
+
+
+
+original source is here:
+	http://andybromberg.com/sentiment-analysis/
+
+
+follow-up post using python here: 
+	http://andybromberg.com/sentiment-analysis-python/
