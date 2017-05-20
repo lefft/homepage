@@ -33,6 +33,16 @@ body {
   /*line-height: 1.4em;*/
 }
 
+
+h6 {
+  font-size: 16pt;
+  color: #3a563a;
+  font-family: 'Raleway', sans-serif;
+  /*font-weight: bold;*/
+  /*line-height: 1.4em;*/
+}
+
+
 main {
   max-width: 50em;
   /*border: 1px solid grey;*/
@@ -52,7 +62,10 @@ h3 {
 
 h4 {
   /*font-weight: bold;*/
-  font-weight: lighter;
+  /*font-weight: lighter;*/
+  font-size: 18pt;
+  color: green;
+
 }
 
 .container-fluid {

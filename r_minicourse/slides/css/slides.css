@@ -1,0 +1,93 @@
+
+
+
+p {
+  align-content: center;
+}
+
+blockquote {
+  font-size: 22px;
+  text-align: center;
+}
+
+body slides > slide {
+  padding: 14px;
+  font-size: 22px;
+  /*line-height: 1.4em;*/
+}
+
+
+h2 {
+  font-size: 34px;
+  font-weight: lighter;
+  padding: 2px;
+  margin-bottom: 0px;
+  -webkit-margin-before: 0.13em;
+  -webkit-margin-after: 0.13em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+
+/*pre.prettyprint.lang-r*/
+
+pre.prettyprint.lang-r {
+  /* for code blocks */
+    font-size: 18px; /* or 20 */
+    /*line-height: 28px;*/
+    /*padding: 10px 0 10px 60px;*/
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    width: 100%;
+    left: 0; /* was -60px by default */
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+pre {
+  /* for code blocks */
+    font-size: 20px;
+    /*line-height: 28px;*/
+    /*padding: 10px 0 10px 60px;*/
+    letter-spacing: -1px;
+    margin-bottom: 15px;
+    /*left: 0;  was -60px by default */
+}
+
+
+
+slide img {
+  max-width: 900px;
+  /*max-height: 350px;*/
+  padding: 4px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+slides > slide:not(.nobackground):after {
+  color: #ffffff;
+}
+
+aside.gdbar {
+  background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #3e8ac7), color-stop(100%, #3e8ac7)) no-repeat;
+  background: linear-gradient(left, #3e8ac7, #3e8ac7) no-repeat;
+}
+
+slides > slide:not(.nobackground):before {
+  background-size: 50px 50px;
+  padding-left: 50px;
+  height: 50px;
+  bottom: 5px;
+}
+
+slides > slide > hgroup + article p {
+  font-weight: 300;
+  color: gray;
+}
+

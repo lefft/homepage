@@ -66,72 +66,64 @@
         <div class="navbar-collapse collapse" id="blaowwie">
 
           <ul class="nav tree">
-            
-            <li class="current">
-              <a href="#overview">
-                overview
-              </a>
-            </li>
 
             <li>
-              <a href="#week-1-programming-fundamentals">
+              <a href="#user-content-week-1-r-programming--workflow-fundamentals">
                 week 1
               </a>
 
               <ul>
-                <li><a href="">slides + code</a></li>
-                <li><a href="">demos</a></li>
-                <li><a href="">readings</a></li>
-                <li><a href="">exercises</a></li>
+                <li><a href="slides/week1_slides.html" target="_blank">slides</a></li>
+                <li><a href="">notes</a></li>
               </ul>
 
             </li>
 
             <li>
-              <a href="#week-2-working-with-data">
+              <a href="#user-content-week-2-working-with-data">
                 week 2
               </a>
 
               <ul>
-                <li><a href="">slides + code</a></li>
-                <li><a href="">demos</a></li>
-                <li><a href="">readings</a></li>
-                <li><a href="">exercises</a></li>
+                <li><a href="">slides</a></li>
+                <li><a href="">notes</a></li>
               </ul>
 
             </li>
 
             <li>
-              <a href="#week-3-plottingvizualizing-data">
+              <a href="#user-content-week-3-plottingvizualizing-data">
                 week 3
               </a>
 
               <ul>
-                <li><a href="">slides + code</a></li>
-                <li><a href="">demos</a></li>
-                <li><a href="">readings</a></li>
-                <li><a href="">exercises</a></li>
+                <li><a href="">slides</a></li>
+                <li><a href="">notes</a></li>
               </ul>
 
             </li>
 
             <li>
-              <a href="#week-4-rmarkdown-and-working-with-the-web">
+              <a href="#user-content-week-4-rmarkdown-and-working-with-the-web">
                 week 4
               </a>
             
             <ul>
-                <li><a href="">slides + code</a></li>
-                <li><a href="">demos</a></li>
-                <li><a href="">readings</a></li>
-                <li><a href="">exercises</a></li>
+                <li><a href="">slides</a></li>
+                <li><a href="">notes</a></li>
               </ul>
 
             </li>
 
             <li>
+              <a href="#cheatsheets">
+                cheatsheets
+              </a>
+            </li>
+
+            <li>
               <a href="#links">
-                links
+                links to stuff
               </a>
             </li>
 
@@ -145,70 +137,125 @@
       <main role="main" class="col-md-10">
 
         <h3 id="pagehead">
-          R mini-course at NORC Academic Research Centers 
+          R mini-course at NORC, Academic Research Centers 
         </h3>
         <hr class="myhr">
 
-        <p>
-          welcome! content will go here ~~ 
-        </p>
+
+<h6> welcome! </h6>
+
+<p>The slides and notes links on the left will be populated with content as the course progresses. If a link is dead, then that means I haven't posted the corresponding item yet. It'll be there eventually. Stay tuned.</p>
+
+<p>
+Below is a rough outline of the topics we'll cover in the class. It's subject to change if there's a critical mass of people who want to focus on some particular aspect. I've also collected some extremely helpful cheatsheets and posted them below. There's also an ever-growing list of links to interesting blog posts, tutorials, articles, etc. about using/learning R, about computing in general, about reproducibility in science, and related topics. I'll try to select technical ones that don't require too much background beyond what we'll cover in the class. </p>
 
 
-          [PAGE UNDER CONSTRUCTION]<br>
-          
-          [PAGE UNDER CONSTRUCTION]<br>
-          
-          [PAGE UNDER CONSTRUCTION]<br>
-        
-        <br><br><br><br><br>
 
 
-        <div id="overview">
-        <h4>overview</h4>
-        <hr>
+<br><br>
 
-        overview content here
+<h6>
+<a id="user-content-week-1-r-programming--workflow-fundamentals" class="anchor" href="#week-1-r-programming--workflow-fundamentals" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>week 1: R programming + workflow fundamentals</h6>
+<hr>
+<p><strong>meta topics:</strong></p>
+<pre><code>- ide's and gui's +c
+- directories and files (incl wd)
+- working with files, doc types
+- project dir structures
+- the command line
+- keyboard shortcuts
+</code></pre>
+<p><strong>first steps:</strong></p>
+<pre><code>- variables + assignments
+- data types 
+- functions + arguments
+- assignments + calls + control flow (oh my!)
+- comments comments comments!
+- errors and warnings
+</code></pre>
+<p><strong>second steps:</strong></p>
+<pre><code>- packages (and libraries)
+- data structures (esp df)
+- control flow
+- coding style
+- more than one way to skin a cat
+</code></pre>
 
-        <br><br>
-        </div>
-        
-        <div id="slides_code">
-        <h4>slides + code</h4>
-        <hr>
-        
-        slides code content here
+<br><br>
+<h6>
+<a id="user-content-week-2-working-with-data" class="anchor" href="#week-2-working-with-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>week 2: working with data</h6>
+<hr>
+<p><strong>file i/o:</strong></p>
+<pre><code>- reading data
+- get data from the web
+- data file formats
+- writing data
+</code></pre>
+<p><strong>data manipulation:</strong></p>
+<pre><code>- subsetting
+- joining/merging
+- cleaning/munging 
+- dplyr
+- aggregation  
+</code></pre>
+<p><strong>optimizing workflow:</strong></p>
+<pre><code>- writing functions
+- regex
+- modifying w lookup tables
+- pipechains via magrittr
+- the concept of tidy data
+</code></pre>
 
-        <br><br>
-        </div>
-        
+<br><br>
+<h6>
+<a id="user-content-week-3-plottingvizualizing-data" class="anchor" href="#week-3-plottingvizualizing-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>week 3: plotting/vizualizing data</h6>
+<hr>
+<p><strong>before plotting:</strong></p>
+<pre><code>- summarizing data
+- screening
+- reshaping
+</code></pre>
+<p><strong>making plots:</strong></p>
+<pre><code>- base graphics
+- ggplot2
+- "reproducible" plots
+- embedding plots (segue to week 4)
+</code></pre>
 
-        <div id="demos">
-        <h4>demos</h4>
-        <hr>
-        
-        demos content here
+<br><br>
+<h6>
+<a id="user-content-week-4-rmarkdown-and-working-with-the-web" class="anchor" href="#week-4-rmarkdown-and-working-with-the-web" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>week 4: Rmarkdown and working with the web</h6>
+<hr>
+<p><strong>making nice clean documents really easily:</strong></p>
+<pre><code>- (r)markdown
+- plain-text workflow
+- calling stuff from other scripts
+</code></pre>
+<p><strong>getting help and/or sharing your work:</strong></p>
+<pre><code>- format for reprex/mwe
+- managing/listing dependencies
+- reproducibility and 21st century science
+</code></pre>
 
-        <br><br>
-        </div>
-        
-        <div id="exercises">
-        <h4>exercises</h4>
-        <hr>
-        
-        exercises content here
 
-        <br><br>
-        </div>
-        
 
-        <div id="links">
-        <h4>links</h4>
-        <hr>
-        
-        links content here
 
-        <br><br>
-        </div>
+
+<br><br>
+<h6>
+cheatsheets
+</h6>
+<hr>
+
+[a bunch of helpful cheatsheets]
+
+<br><br>
+<h6>
+links to stuff
+</h6>
+<hr>
+
+[links to cool blog posts etc. that i've come across recently]
 
 
       </main>

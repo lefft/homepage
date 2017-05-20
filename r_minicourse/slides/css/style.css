@@ -1,0 +1,89 @@
+/*<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway|Roboto+Mono:400,700');
+</style>
+*/
+
+<link href="https://fonts.googleapis.com/css?family=Raleway|Roboto+Mono:400,700" rel="stylesheet">
+
+body {
+  padding: 10px;
+  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.container-fluid.main-container {
+  font-size: 14px;
+  font-family: 'Raleway', sans-serif;
+}
+
+h1 { /* Header 1 */
+ font-size: 28px;
+ font-weight:  lighter;
+ color: DarkGreen;
+}
+
+h2 { /* Header 2 */
+ font-size: 24px;
+ color: green;
+}
+
+h3 { /* Header 3 */
+ font-size: 22px;
+ color: green;
+ font-weight: bold;
+}
+
+code { 
+	/* Code block */ 
+  font-family: 'Roboto Mono', monospace !important;
+	font-size: 14px; 
+}
+
+code.r { 
+  /* Code block */ 
+  font-family: 'Roboto Mono', monospace !important;
+  font-size: 14px; 
+}
+
+
+/*div p*/
+
+div > p {
+  font-size: 14pt !important;
+  font-family: 'Raleway', sans-serif !important;
+}
+
+blockquote {
+  font-size: 16px;
+  text-align: center;
+}
+
+/*pre.prettyprint.lang-r*/
+
+pre.prettyprint.lang-r {
+  /* for code blocks */
+    font-size: 14px; /* or 20 */
+    font-family: 'Roboto Mono', monospace !important;
+    /*line-height: 28px;*/
+    /*padding: 10px 0 10px 60px;*/
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    width: 100%;
+    left: 0; /* was -60px by default */
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+pre {
+  /* for code blocks */
+    font-size: 14px;
+    font-family: 'Roboto Mono', monospace !important;
+    /*line-height: 28px;*/
+    /*padding: 10px 0 10px 60px;*/
+    letter-spacing: -1px;
+    margin-bottom: 15px;
+    /*left: 0;  was -60px by default */
+}
+
