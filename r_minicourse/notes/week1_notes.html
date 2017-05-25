@@ -405,12 +405,12 @@ first_df</code></pre>
 )
 cool_df</code></pre>
 <pre><code>##     id group    score
-## 1 id_1     a 64.60713
-## 2 id_2     a 50.67225
-## 3 id_3     a 84.54462
-## 4 id_4     b 57.20612
-## 5 id_5     b 56.27461
-## 6 id_6     b 98.71738</code></pre>
+## 1 id_1     a 88.00637
+## 2 id_2     a 68.93861
+## 3 id_3     a 83.88812
+## 4 id_4     b 95.64835
+## 5 id_5     b 57.17870
+## 6 id_6     b 94.36891</code></pre>
 <p><strong>note</strong> the use of line-breaks and whitespace for legibility. This is a matter of coding style, but can make things way easier to read. For a complete style guide for writing R code, see Google’s official <a href="https://google.github.io/styleguide/Rguide.xml">R style guide</a> and <a href="http://adv-r.had.co.nz/Style.html">the section on coding style</a> of Hadley Wickham’s (amazing) book <em>Advanced R</em>. An important quote from the book: “You don’t have to use my style, but you really should use a consistent style.”</p>
 <p><strong>note</strong>: the <code>score</code> column was created with the function <code>runif()</code>. the “r” is for “random”, and the “unif” is for “uniform”, as in “uniform distribution.”</p>
 <p><strong>exercise</strong>: confirm what the three arguments are doing in the <code>runif()</code> call. then check out <code>dunif()</code>, <code>punif()</code>, and <code>qunif()</code> by googling around a bit. corresponding functions exist for many probability distributions, e.g. <code>r/d/p/qnorm()</code></p>
@@ -428,17 +428,17 @@ cool_df[, c(&quot;id&quot;, &quot;group&quot;)]
 # getting rows *and* columns
 cool_df[1:2, 2:3]</code></pre>
 <pre><code>##     id group    score
-## 1 id_1     a 64.60713
-## 2 id_2     a 50.67225
-## 3 id_3     a 84.54462
+## 1 id_1     a 88.00637
+## 2 id_2     a 68.93861
+## 3 id_3     a 83.88812
 ##     id group    score
-## 1 id_1     a 64.60713
-## 2 id_2     a 50.67225
-## 3 id_3     a 84.54462
-## [1] 64.60713 50.67225 84.54462 57.20612 56.27461 98.71738
+## 1 id_1     a 88.00637
+## 2 id_2     a 68.93861
+## 3 id_3     a 83.88812
+## [1] 88.00637 68.93861 83.88812 95.64835 57.17870 94.36891
 ## [1] id_1 id_2 id_3 id_4 id_5 id_6
 ## Levels: id_1 id_2 id_3 id_4 id_5 id_6
-## [1] 64.60713 50.67225 84.54462 57.20612 56.27461 98.71738
+## [1] 88.00637 68.93861 83.88812 95.64835 57.17870 94.36891
 ##     id group
 ## 1 id_1     a
 ## 2 id_2     a
@@ -447,14 +447,14 @@ cool_df[1:2, 2:3]</code></pre>
 ## 5 id_5     b
 ## 6 id_6     b
 ##   group    score
-## 1     a 64.60713
-## 2     a 50.67225</code></pre>
+## 1     a 88.00637
+## 2     a 68.93861</code></pre>
 <p><strong>tip</strong>: when you’re slicing and dicing a data frame using the <code>[ , ]</code> syntax, remember to use the comma!</p>
 <p><strong>exercise</strong>: given the examples above, explain how the <code>[ , ]</code> syntax works in a couple of sentences. then google something like “R double bracket subsetting syntax data frame”, and explain how <code>[ , ]</code> differs from <code>[[ ]]</code>.</p>
 <p><strong>look at the Base R cheatsheet posted on the course page for an excellent overview!</strong></p>
 <p>Okay, now let’s see who passed the exam:</p>
 <pre class="r"><code>cool_df$id[cool_df$score &gt;= 60]</code></pre>
-<pre><code>## [1] id_1 id_3 id_6
+<pre><code>## [1] id_1 id_2 id_3 id_4 id_6
 ## Levels: id_1 id_2 id_3 id_4 id_5 id_6</code></pre>
 <p><strong>note</strong>: the output isn’t quoted, and it says <code>Levels: ...</code>. this is because R codes characters in data frames by default as <strong>factors</strong>. A factor is kind of like the representation of a column in statistical packages like Stata, in the sense that a factor vector is <em>technically</em> of integer type (I think this corresponds to “values” in Stata), but each unique integer value is associated with a character string called a <strong>level</strong> (which I think corresponds to a “value label”). So with factors, there’s a fixed set of possible values, some of which might not even be present in the data (months are a good example of something that’s natural to think of as a factor). This is actually kind of annoying in the big picture, but we’ll live with it for now.</p>
 <p><strong>note</strong>: to code characters as characters (instead of factors) when creating a data frame, specify <code>data.frame()</code> the <code>stringsAsFactors</code> argument as <code>FALSE</code>.</p>
@@ -486,8 +486,8 @@ nrow(cool_df)       # get the number of rows
 ncol(cool_df)       # get the number of columns
 names(cool_df)      # get the the names of the columns</code></pre>
 <pre><code>##     id group    score passed  aced failed
-## 1 id_1     a 64.60713   TRUE FALSE  FALSE
-## 2 id_2     a 50.67225  FALSE FALSE   TRUE
+## 1 id_1     a 88.00637   TRUE FALSE  FALSE
+## 2 id_2     a 68.93861   TRUE FALSE  FALSE
 ## [1] 6 6
 ## [1] 6
 ## [1] 6
@@ -500,21 +500,21 @@ summary(cool_df)  # get useful info about each column </code></pre>
 <pre><code>## 'data.frame':    6 obs. of  6 variables:
 ##  $ id    : Factor w/ 6 levels &quot;id_1&quot;,&quot;id_2&quot;,..: 1 2 3 4 5 6
 ##  $ group : Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 1 1 2 2 2
-##  $ score : num  64.6 50.7 84.5 57.2 56.3 ...
-##  $ passed: logi  TRUE FALSE TRUE FALSE FALSE TRUE
-##  $ aced  : logi  FALSE FALSE FALSE FALSE FALSE TRUE
-##  $ failed: logi  FALSE TRUE FALSE TRUE TRUE FALSE
+##  $ score : num  88 68.9 83.9 95.6 57.2 ...
+##  $ passed: logi  TRUE TRUE TRUE TRUE FALSE TRUE
+##  $ aced  : logi  FALSE FALSE FALSE TRUE FALSE TRUE
+##  $ failed: logi  FALSE FALSE FALSE FALSE TRUE FALSE
 ##     id    group     score         passed           aced        
-##  id_1:1   a:3   Min.   :50.67   Mode :logical   Mode :logical  
-##  id_2:1   b:3   1st Qu.:56.51   FALSE:3         FALSE:5        
-##  id_3:1         Median :60.91   TRUE :3         TRUE :1        
-##  id_4:1         Mean   :68.67                                  
-##  id_5:1         3rd Qu.:79.56                                  
-##  id_6:1         Max.   :98.72                                  
+##  id_1:1   a:3   Min.   :57.18   Mode :logical   Mode :logical  
+##  id_2:1   b:3   1st Qu.:72.68   FALSE:1         FALSE:4        
+##  id_3:1         Median :85.95   TRUE :5         TRUE :2        
+##  id_4:1         Mean   :81.34                                  
+##  id_5:1         3rd Qu.:92.78                                  
+##  id_6:1         Max.   :95.65                                  
 ##    failed       
 ##  Mode :logical  
-##  FALSE:3        
-##  TRUE :3        
+##  FALSE:5        
+##  TRUE :1        
 ##                 
 ##                 
 ## </code></pre>
@@ -552,11 +552,11 @@ x &lt;- c(x, 6)
 print(paste(&quot;now the value of x is:&quot;, list(x), sep=&quot; &quot;))
 
 # what's y gonna be now?!?!
-print(paste(&quot;now the value of y is:&quot;, list(x), sep=&quot; &quot;))</code></pre>
+print(paste(&quot;now the value of y is:&quot;, list(y), sep=&quot; &quot;))</code></pre>
 <pre><code>## [1] &quot;the value of x is:     c(3, 4, 5)&quot;
 ## [1] &quot;the value of y is:     c(3, 4, 5)&quot;
 ## [1] &quot;now the value of x is: c(3, 4, 5, 6)&quot;
-## [1] &quot;now the value of y is: c(3, 4, 5, 6)&quot;</code></pre>
+## [1] &quot;now the value of y is: c(3, 4, 5)&quot;</code></pre>
 <p>Variable behavior in Python:</p>
 <!-- see python version with # Sys.which("python")  -->
 <pre class="python"><code># x points to the list [3, 4, 5]
