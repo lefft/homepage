@@ -217,14 +217,21 @@ is.vector(10)
 identical(10, c(10))
 identical(&quot;boosh&quot;, c(&quot;boosh&quot;))
 
-identical(10, c(10.0))</code></pre>
+identical(10, 10.0)
+identical(as.numeric(10), 10.0)
+
+identical(as.integer(10), 10.0)
+identical(as.integer(10), 10)</code></pre>
 <pre><code>## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE
-## [1] TRUE</code></pre>
-<p><strong>exercise</strong>: why are the first two <code>identical()</code> statements true but the last one false?</p>
+## [1] TRUE
+## [1] TRUE
+## [1] FALSE
+## [1] FALSE</code></pre>
+<p><strong>exercise</strong>: why are the final two <code>identical()</code> statements false? why are the others true?</p>
 <p>Vectors can hold elements of any type, but they must all be of the same type. to keep things straight in your head, it can help to include data types in variable names:</p>
 <pre class="r"><code>myvec_char &lt;- c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;,&quot;e&quot;)
 myvec_char
@@ -398,12 +405,12 @@ first_df</code></pre>
 )
 cool_df</code></pre>
 <pre><code>##     id group    score
-## 1 id_1     a 67.89917
-## 2 id_2     a 51.58100
-## 3 id_3     a 57.29747
-## 4 id_4     b 65.78287
-## 5 id_5     b 53.99484
-## 6 id_6     b 91.22609</code></pre>
+## 1 id_1     a 64.60713
+## 2 id_2     a 50.67225
+## 3 id_3     a 84.54462
+## 4 id_4     b 57.20612
+## 5 id_5     b 56.27461
+## 6 id_6     b 98.71738</code></pre>
 <p><strong>note</strong> the use of line-breaks and whitespace for legibility. This is a matter of coding style, but can make things way easier to read. For a complete style guide for writing R code, see Google’s official <a href="https://google.github.io/styleguide/Rguide.xml">R style guide</a> and <a href="http://adv-r.had.co.nz/Style.html">the section on coding style</a> of Hadley Wickham’s (amazing) book <em>Advanced R</em>. An important quote from the book: “You don’t have to use my style, but you really should use a consistent style.”</p>
 <p><strong>note</strong>: the <code>score</code> column was created with the function <code>runif()</code>. the “r” is for “random”, and the “unif” is for “uniform”, as in “uniform distribution.”</p>
 <p><strong>exercise</strong>: confirm what the three arguments are doing in the <code>runif()</code> call. then check out <code>dunif()</code>, <code>punif()</code>, and <code>qunif()</code> by googling around a bit. corresponding functions exist for many probability distributions, e.g. <code>r/d/p/qnorm()</code></p>
@@ -421,17 +428,17 @@ cool_df[, c(&quot;id&quot;, &quot;group&quot;)]
 # getting rows *and* columns
 cool_df[1:2, 2:3]</code></pre>
 <pre><code>##     id group    score
-## 1 id_1     a 67.89917
-## 2 id_2     a 51.58100
-## 3 id_3     a 57.29747
+## 1 id_1     a 64.60713
+## 2 id_2     a 50.67225
+## 3 id_3     a 84.54462
 ##     id group    score
-## 1 id_1     a 67.89917
-## 2 id_2     a 51.58100
-## 3 id_3     a 57.29747
-## [1] 67.89917 51.58100 57.29747 65.78287 53.99484 91.22609
+## 1 id_1     a 64.60713
+## 2 id_2     a 50.67225
+## 3 id_3     a 84.54462
+## [1] 64.60713 50.67225 84.54462 57.20612 56.27461 98.71738
 ## [1] id_1 id_2 id_3 id_4 id_5 id_6
 ## Levels: id_1 id_2 id_3 id_4 id_5 id_6
-## [1] 67.89917 51.58100 57.29747 65.78287 53.99484 91.22609
+## [1] 64.60713 50.67225 84.54462 57.20612 56.27461 98.71738
 ##     id group
 ## 1 id_1     a
 ## 2 id_2     a
@@ -440,14 +447,14 @@ cool_df[1:2, 2:3]</code></pre>
 ## 5 id_5     b
 ## 6 id_6     b
 ##   group    score
-## 1     a 67.89917
-## 2     a 51.58100</code></pre>
+## 1     a 64.60713
+## 2     a 50.67225</code></pre>
 <p><strong>tip</strong>: when you’re slicing and dicing a data frame using the <code>[ , ]</code> syntax, remember to use the comma!</p>
 <p><strong>exercise</strong>: given the examples above, explain how the <code>[ , ]</code> syntax works in a couple of sentences. then google something like “R double bracket subsetting syntax data frame”, and explain how <code>[ , ]</code> differs from <code>[[ ]]</code>.</p>
 <p><strong>look at the Base R cheatsheet posted on the course page for an excellent overview!</strong></p>
 <p>Okay, now let’s see who passed the exam:</p>
 <pre class="r"><code>cool_df$id[cool_df$score &gt;= 60]</code></pre>
-<pre><code>## [1] id_1 id_4 id_6
+<pre><code>## [1] id_1 id_3 id_6
 ## Levels: id_1 id_2 id_3 id_4 id_5 id_6</code></pre>
 <p><strong>note</strong>: the output isn’t quoted, and it says <code>Levels: ...</code>. this is because R codes characters in data frames by default as <strong>factors</strong>. A factor is kind of like the representation of a column in statistical packages like Stata, in the sense that a factor vector is <em>technically</em> of integer type (I think this corresponds to “values” in Stata), but each unique integer value is associated with a character string called a <strong>level</strong> (which I think corresponds to a “value label”). So with factors, there’s a fixed set of possible values, some of which might not even be present in the data (months are a good example of something that’s natural to think of as a factor). This is actually kind of annoying in the big picture, but we’ll live with it for now.</p>
 <p><strong>note</strong>: to code characters as characters (instead of factors) when creating a data frame, specify <code>data.frame()</code> the <code>stringsAsFactors</code> argument as <code>FALSE</code>.</p>
@@ -479,8 +486,8 @@ nrow(cool_df)       # get the number of rows
 ncol(cool_df)       # get the number of columns
 names(cool_df)      # get the the names of the columns</code></pre>
 <pre><code>##     id group    score passed  aced failed
-## 1 id_1     a 67.89917   TRUE FALSE  FALSE
-## 2 id_2     a 51.58100  FALSE FALSE   TRUE
+## 1 id_1     a 64.60713   TRUE FALSE  FALSE
+## 2 id_2     a 50.67225  FALSE FALSE   TRUE
 ## [1] 6 6
 ## [1] 6
 ## [1] 6
@@ -493,17 +500,17 @@ summary(cool_df)  # get useful info about each column </code></pre>
 <pre><code>## 'data.frame':    6 obs. of  6 variables:
 ##  $ id    : Factor w/ 6 levels &quot;id_1&quot;,&quot;id_2&quot;,..: 1 2 3 4 5 6
 ##  $ group : Factor w/ 2 levels &quot;a&quot;,&quot;b&quot;: 1 1 1 2 2 2
-##  $ score : num  67.9 51.6 57.3 65.8 54 ...
-##  $ passed: logi  TRUE FALSE FALSE TRUE FALSE TRUE
+##  $ score : num  64.6 50.7 84.5 57.2 56.3 ...
+##  $ passed: logi  TRUE FALSE TRUE FALSE FALSE TRUE
 ##  $ aced  : logi  FALSE FALSE FALSE FALSE FALSE TRUE
-##  $ failed: logi  FALSE TRUE TRUE FALSE TRUE FALSE
+##  $ failed: logi  FALSE TRUE FALSE TRUE TRUE FALSE
 ##     id    group     score         passed           aced        
-##  id_1:1   a:3   Min.   :51.58   Mode :logical   Mode :logical  
-##  id_2:1   b:3   1st Qu.:54.82   FALSE:3         FALSE:5        
-##  id_3:1         Median :61.54   TRUE :3         TRUE :1        
-##  id_4:1         Mean   :64.63                                  
-##  id_5:1         3rd Qu.:67.37                                  
-##  id_6:1         Max.   :91.23                                  
+##  id_1:1   a:3   Min.   :50.67   Mode :logical   Mode :logical  
+##  id_2:1   b:3   1st Qu.:56.51   FALSE:3         FALSE:5        
+##  id_3:1         Median :60.91   TRUE :3         TRUE :1        
+##  id_4:1         Mean   :68.67                                  
+##  id_5:1         3rd Qu.:79.56                                  
+##  id_6:1         Max.   :98.72                                  
 ##    failed       
 ##  Mode :logical  
 ##  FALSE:3        
