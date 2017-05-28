@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,400i,700');
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,400i,600,700');
 
 .body {
   font-family: 'Raleway', sans-serif;
@@ -33,15 +33,26 @@ body {
   /*line-height: 1.4em;*/
 }
 
+code {
+  font-size: 10pt;
+  font-family: 'Roboto Mono', monospace;
+}
 
 h6 {
   font-size: 16pt;
   color: #3a563a;
   font-family: 'Raleway', sans-serif;
-  /*font-weight: bold;*/
+  font-weight: 600;
   /*line-height: 1.4em;*/
 }
 
+h5 {
+  font-size: 16pt;
+  color: #596d59;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  margin-top: 20px;
+}
 
 main {
   max-width: 50em;
