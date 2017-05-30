@@ -121,7 +121,7 @@ $(document).ready(function () {
 
 
 <hr style="height:2px; background-color: gray; color:gray;">
-<!-- The use of twitter data for estimating public sentiment about issues can still be considered a fledgling field. Here we investigate the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time.  -->
+<p>The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we’ll only use data publicly available via the twitter API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only the standard twitter API tools (to my knowledge, at least).</p>
 <p><br></p>
 <div id="btc-prices-from-twitter" class="section level3">
 <h3>1. btc prices from twitter</h3>
@@ -313,47 +313,9 @@ get_tweets &lt;- function(date){
   return(tweets)
 }
 
-waow &lt;- twListToDF(sapply(dates, get_tweets))</code></pre>
-<pre><code>## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
+waow &lt;- twListToDF(sapply(dates, get_tweets))
 
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56
-
-## Warning in doRppAPICall(&quot;search/tweets&quot;, n, params = params,
-## retryOnRateLimit = retryOnRateLimit, : 100 tweets were requested but the
-## API can only return 56</code></pre>
-<pre class="r"><code>waow_clf &lt;- boosh(text=waow$text)
+waow_clf &lt;- boosh(text=waow$text)
 
 # may want to remove some
 plot(table(waow_clf$label))</code></pre>
