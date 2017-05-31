@@ -20,7 +20,7 @@ The use of twitter data for estimating public sentiment about issues can still b
 
 #### set up twitter api
 
-```{r include=FALSE}
+```{r paqqs, include=FALSE}
 # load dependencies -- for data acquisition and processing
 library("twitteR");   library("ROAuth");   library("httr")
 library("lubridate"); library("reshape2"); library("dplyr")
@@ -33,9 +33,9 @@ options(httr_oauth_cache=FALSE)
 ```
 
 
-```{r}
+```{r twtr_api}
 # read in api keys and access tokens
-keyz <- read.csv("../../../../keyz.csv", header=TRUE, stringsAsFactors=FALSE)
+keyz <- read.csv("keyz.csv", header=TRUE, stringsAsFactors=FALSE)
 # set up twitter auth -- call `setup_twitter_oauth()` w keys from `keyz`
 setup_twitter_oauth(
   consumer_key    = keyz$value[keyz$auth_type=="twtr_api_key"], 
@@ -49,7 +49,7 @@ setup_twitter_oauth(
 
 #### get btc price tweets + clean them up
 
-```{r}
+```{r btc_price_tweets}
 # get tweets from user @bitcoinprice for maximum n (3200 as of may2017)
 
 # @bitcoinprice
@@ -57,7 +57,8 @@ setup_twitter_oauth(
 dat <- userTimeline(user="bitcoinprice", n=3200, excludeReplies=TRUE) %>% 
   twListToDF() %>% 
   select(text, screenName, created, favoriteCount, retweetCount, isRetweet) %>% 
-  mutate(date=date(created), hour=hour(created))
+  mutate(date=date(created), hour=hour(created)) %>% 
+  rename(source=screenName)
 
 # a tweet consists of "toss[1] + dddd.dd + toss[2]"
 toss <- c("The average price of Bitcoin across all exchanges is ", " USD")
@@ -95,14 +96,14 @@ dat$day <- factor(dat$day, levels=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))
 dat$price[dat$price==1.25] <- dat$price[dat$price==1.25] * 1000
 
 # now cut the df to just the cols we want
-dat <- dat[, c("screenName","created","date","hour","day","price")]
+dat <- dat[, c("source","created","date","hour","day","price")]
 
 ```
 
 
 #### plot the data
 
-```{r}
+```{r plot_pricetweets, fig.width=7.5, fig.height=3.5, out.width="95%"}
 # what's our date range? (3200 hourly tweets so should be 3200/24 days ~ 4mo)
 # from "2017-01-15" to "2017-05-29"
 # range(dat$date)
@@ -124,14 +125,14 @@ ggplot(pdat, aes(x=hour, y=mean_price)) +
 
 #### inspect + validate accuracy on external source
 
-```{r}
+```{r validate_pricetweets, fig.width=7.5, fig.height=3.5, out.width="95%"}
 ### get external data now
 bdat <- read.csv(
   "data/bitcoinity_data-price-volume.csv", 
   col.names=c("date","price","volume"),
   colClasses=c("Date","numeric","numeric")
 )
-bdat$screenName <- "bitcoinity.org"
+bdat$source <- "bitcoinity.org"
 
 # the twitter data:
 ggplot(dat, aes(x=created, y=price)) +
@@ -142,27 +143,28 @@ ggplot(bdat[bdat$date >= min(dat$date), ], aes(x=date, y=price)) +
   geom_line() + scale_y_continuous(limits=c(0, 3000))
 
 # the external data, plotted on the whole lifetime of btc:
-ggplot(bdat[bdat$date >= "2017-01-01", ], aes(x=date, y=price)) +
+ggplot(bdat, aes(x=date, y=price)) +
   geom_line() + scale_y_continuous(limits=c(0, 3000)) +
   geom_line(aes(x=date, y=volume/1e6), color="orange") +
-  scale_x_date(date_breaks="2 weeks") +
+  scale_x_date(date_breaks="6 months") +
   geom_hline(yintercept=max(bdat$price), color="#8aa8b5", linetype="dashed") +
   annotate(geom="text", x=as.Date("2017-02-01"), y=max(bdat$price)+100, 
-           color="#8aa8b5", label="all-time high")
+           color="#8aa8b5", label="all-time high") +
+  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1))
 
 
 # want to merge twitter data with bitcoinity data
 # first need to aggregate twitter data to the day-level
 tdat_simple <- dat %>% 
   mutate(date=as.character(date)) %>% 
-  select(screenName, date, price) %>% 
-  group_by(screenName, date) %>% summarize(
+  select(source, date, price) %>% 
+  group_by(source, date) %>% summarize(
   price = mean(price, na.rm=TRUE)
 ) %>% data.frame()
 
 bdat_simple <- bdat %>% 
   filter(date >= min(dat$date)) %>% 
-  select(screenName, date, price) %>% 
+  select(source, date, price) %>% 
   mutate(date=as.character(date))
 
 head(tdat_simple, 2); head(bdat_simple, 2)
@@ -170,11 +172,12 @@ head(tdat_simple, 2); head(bdat_simple, 2)
 merged <- rbind(tdat_simple, bdat_simple)
 merged$date <- as.Date(merged$date)
 
-ggplot(merged, aes(x=date, y=price, group=screenName, color=screenName)) +
+ggplot(merged, aes(x=date, y=price, group=source, color=source)) +
   geom_line() + 
   scale_y_continuous(limits=c(0, 3000)) +
   scale_x_date(date_breaks="2 weeks") +
-  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1)) +
+  theme(legend.position="top")
 
 ```
 
@@ -185,17 +188,15 @@ ggplot(merged, aes(x=date, y=price, group=screenName, color=screenName)) +
 
 #### enter classifier
 
-```{r}
+```{r load_monkey}
 # https://github.com/ropensci/monkeylearn
 library("monkeylearn")
-
-keys <- read.csv("../../../../keyz.csv", stringsAsFactors=FALSE)
-ml_key  <- keys$value[keys$auth_type=="monkey_pkey"]
+ml_key  <- keyz$value[keyz$auth_type=="monkey_pkey"]
 
 ```
 
 
-```{r}
+```{r classifier_info}
 # the confusion matrix of the classifier at may30 4pm
 # Predicted
 # ne	ne	po
@@ -206,12 +207,15 @@ ml_key  <- keys$value[keys$auth_type=="monkey_pkey"]
 ```
 
 
-```{r}
-boosh <- function(text){
+```{r classify_func}
+# tweet sentiment classifiers:
+#   cl_qkjxv9Ly <== https://app.monkeylearn.com/main/classifiers/cl_qkjxv9Ly/
+#   cl_RWBfoo2B <== https://app.monkeylearn.com/main/classifiers/cl_RWBfoo2B/
+ml_classify <- function(text, id){
   monkeylearn_classify(
     request=text, 
     key=ml_key, 
-    classifier_id="cl_qkjxv9Ly",
+    classifier_id=id,
     verbose=TRUE
   )
 }
@@ -220,19 +224,19 @@ boosh <- function(text){
 
 #### "validate" classifier on unabomber manifesto [sloppy!]
 
-```{r eval=FALSE}
+```{r validate_classifier, eval=FALSE}
 
 # going to use this classifier:
 #   https://app.monkeylearn.com/main/classifiers/cl_qkjxv9Ly/
 # manif <- readLines("input/unabomber-manifesto.txt")
-# blaowwie <- boosh(manif)
+# blaowwie <- ml_classify(manif)
 ```
 
 
 #### average sentiment measure abt btc (last ~4mo)
 
 
-```{r}
+```{r sample_btc_tweets}
 # get random sample of btc tweets from last 4mo,
 # then get sentiment score
 
@@ -241,19 +245,74 @@ dates <-
   as.Date(sample(1:100, size=10), origin="2017-02-01") %>% 
   as.character()
 
-get_tweets <- function(date){
-  tweets <- searchTwitter("bitcoin", n=100, resultType="popular", since=date)
+get_tweets <- function(date, term="bitcoin"){
+  tweets <- searchTwitter(term, n=100, resultType="popular", since=date)
   return(tweets)
 }
 
 waow <- twListToDF(sapply(dates, get_tweets))
 
-waow_clf <- boosh(text=waow$text)
+```
+
+```{r classifier1, fig.show='hold', fig.width=5, fig.height=3.5, out.width="47.5%"}
+# classify here
+waow_clf1 <- ml_classify(text=waow$text, id="cl_qkjxv9Ly")
+
+
+waow_clf1 %>% group_by(label) %>% summarize(
+  num=length(label),
+  avg_prob=mean(probability, na.rm=TRUE)
+)
+
+table(waow_clf1$label)
 
 # may want to remove some
-plot(table(waow_clf$label))
-hist(waow_clf$probability)
+barplot(table(waow_clf1$label))
+hist(waow_clf1$probability)
 
+```
+
+
+```{r classifier2, fig.show='hold', fig.width=5, fig.height=3.5, out.width="47.5%"}
+# classify here
+waow_clf2 <- ml_classify(text=waow$text, id="cl_RWBfoo2B")
+
+
+waow_clf2 %>% group_by(label) %>% summarize(
+  num=length(label),
+  avg_prob=mean(probability, na.rm=TRUE)
+)
+
+table(waow_clf2$label)
+
+# may want to remove some
+barplot(table(waow_clf2$label))
+hist(waow_clf2$probability)
+
+```
+
+
+```{r hashclf, fig.show='hold', fig.width=5, fig.height=3.5, out.width="47.5%"}
+waow_hash <- twListToDF(sapply(dates, get_tweets, term="#bitcoin"))
+# waow_hash2 <- twListToDF(sapply(dates, get_tweets, term="#btc"))
+
+waow_hashclf <- ml_classify(text=waow_hash$text, id="cl_RWBfoo2B")
+
+waow_hashclf %>% group_by(label) %>% summarize(
+  num=length(label),
+  avg_prob=mean(probability, na.rm=TRUE)
+)
+
+table(waow_hashclf$label)
+
+# may want to remove some
+barplot(table(waow_hashclf$label))
+hist(waow_hashclf$probability)
+```
+
+
+```{r summarize_btc_tweets}
+# summarize the btc tweet scores here
 ```
 
 
@@ -264,7 +323,7 @@ hist(waow_clf$probability)
 #### identify sharp increase day
 
 ```{r}
-# A question that I’m often asked is how to retrieve data from the past, generally
+# A question that I'm often asked is how to retrieve data from the past, generally
 # people are doing a study on some major event that has already happened (e.g.
 # Arab Spring, an election, etc). Using the Twitter API this is impossible as
 # you can only go back a small amount. However, if you have the ability to
