@@ -1,0 +1,280 @@
+---
+title: "btc_part1_draft.rmd"
+author: "timothy leffel  &nbsp;&nbsp; may31/2017"
+output: html_document
+---
+
+**work in progress, may31/2017**
+
+<hr style="height:2px; background-color: gray; color:gray;">
+
+
+- part1: quick description of idea, plot + validate twitter btc price strategy (*just twitter + external btc data*)
+- part2: use monkeylearn classifiers to measure sentiment abt stuff, moving to btc topic (*introduce monkeylearn api*)
+- part3: identify key dates, assess rel'ship btwn btc sentiment and price (*limitations of twitter api become obvious here*)
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+```
+
+<hr style="height:2px; background-color: gray; color:gray;">
+
+The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we'll only use data publicly available via the twitter API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only the standard twitter API tools (to my knowledge, at least). A scaled-up version of this strategy would ideally obtain user tweets from the twitter firehose...
+
+
+linxe to put in final post:
+
+* [the concept of a "twitter-driven" trading bot](https://thestack.com/world/2015/05/08/three-steps-to-building-a-twitter-driven-trading-bot/)
+* [documentation for `monkeylearn::` R package](LINK)
+* [twitter firehose vs api (and api's in general)](https://brightplanet.com/2013/06/twitter-firehose-vs-twitter-api-whats-the-difference-and-why-should-you-care/)
+* ...
+
+<br>
+
+### 1. btc prices from twitter
+
+<hr style="height:1px; background-color:lightgray; color:lightgray;">
+
+#### set up twitter api
+
+```{r paqqs, include=FALSE}
+# load dependencies -- for data acquisition and processing
+library("twitteR");   library("ROAuth");   library("httr")
+library("lubridate"); library("reshape2"); library("dplyr")
+
+# load dependencies -- for plotting results
+library("ggplot2"); library("scales")
+
+# set auth cache to false to avoid prompts in `setup_twitter_oauth()`
+options(httr_oauth_cache=FALSE)
+```
+
+
+```{r twtr_api}
+# read in api keys and access tokens
+keyz <- read.csv("../../../../keyz.csv", stringsAsFactors=FALSE)
+# set up twitter auth -- call `setup_twitter_oauth()` w keys from `keyz`
+setup_twitter_oauth(
+  consumer_key    = keyz$value[keyz$auth_type=="twtr_api_key"], 
+  consumer_secret = keyz$value[keyz$auth_type=="twtr_api_sec"], 
+  access_token    = keyz$value[keyz$auth_type=="twtr_acc_tok"], 
+  access_secret   = keyz$value[keyz$auth_type=="twtr_acc_sec"]
+)
+```
+
+
+#### get btc price tweets + clean them up
+
+```{r btc_price_tweets}
+# get tweets from user @bitcoinprice for maximum n (3200 as of may2017)
+
+# @bitcoinprice
+# The average price of Bitcoin across all exchanges is ... 
+dat <- userTimeline(user="bitcoinprice", n=3200, excludeReplies=TRUE) %>% 
+  twListToDF() %>% 
+  # PUT RENAMES HERE INSTEAD OF BELOW
+  select(text, screenName, created, favoriteCount, retweetCount, isRetweet) %>% 
+  mutate(date=date(created), hour=hour(created)) %>% 
+  rename(data_source=screenName)
+```
+
+
+```{r extract_price}
+# a tweet consists of "toss[1] + dddd.dd + toss[2]"
+toss <- c("The average price of Bitcoin across all exchanges is ", " USD")
+
+# check that all tweets are formulaic + as expected
+if (!all(grepl(paste0(toss[1], "\\d*\\.?\\d*", toss[2]), dat$text))){
+  message("careful -- tweets not as formulaic as they may seem! :/ ")
+}
+
+# if tweets are formulaic, just remove `toss` + extract price from `dat$tweet`
+dat$price <- gsub(paste0(toss, collapse="|"), "", dat$text)
+
+# check that we don't have any words/letters left before converting
+if (sum(grepl("[a-z]", dat$price)) > 0){
+  warning("careful -- some tweets were not in expected format! :o ")
+}
+
+# now convert to numeric
+dat$price <- as.numeric(dat$price)
+
+# PUT THIS AS A FILTER IN PIPE CHAIN ABOVE
+# delete any retweets that could've crept in
+dat <- dat[!dat$isRetweet, ]
+
+# INTEGRATE THIS INTO PIPE CHAIN ABOVE
+# convert date_time to nicer format [CHECK THAT MOVING FROM lt TO CT IS OKAY]
+dat$date_time <- as.POSIXct(dat$created, tz="UTC")
+
+# PUT THIS IN PIPE CHAIN ALSO
+# get day of the week so we can look at weekly trends
+dat$day <- weekdays(dat$date_time, abbreviate=TRUE)
+dat$day <- factor(dat$day, levels=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))
+# "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
+
+# notice that on 2017-03-14 15:00:03, the value is listed at $1.25
+# inspecting the surrounding data suggests it's probably meant to be $1225.00.
+# **exercise**: what does this suggest about how the bot works?
+dat$price[dat$price==1.25] <- dat$price[dat$price==1.25] * 1000
+
+# INTEGRATE THIS INTO PIPECHAIN ABOVE
+# now cut the df to just the cols we want
+dat <- dat[, c("data_source","created","date","hour","day","price")]
+
+```
+
+
+#### plot the data
+
+```{r plot_pricetweets, fig.width=7.5, fig.height=3.5, out.width="95%"}
+# what's our date range? (3200 hourly tweets so should be 3200/24 days ~ 4mo)
+range(dat$date)
+
+# now make some plots!
+ggplot(dat, aes(x=created, y=price)) +
+  geom_line() + scale_y_continuous(limits=c(0, 3000))
+
+pdat <- dat %>% select(day, hour, price) %>% group_by(day, hour) %>% summarize(
+  mean_price = mean(price)
+) %>% data.frame()
+
+ggplot(pdat, aes(x=hour, y=mean_price)) + 
+  geom_line() + 
+  facet_wrap(~day, ncol=7)
+
+```
+
+
+#### inspect + validate accuracy on external data_source
+
+```{r validate_pricetweets, fig.width=7.5, fig.height=3.5, out.width="95%"}
+### get external data now
+bdat <- read.csv(
+  "data/bitcoinity_data-price-volume.csv", 
+  col.names=c("date","price","volume"),
+  colClasses=c("Date","numeric","numeric")
+)
+bdat$data_source <- "bitcoinity.org"
+
+# the twitter data:
+ggplot(dat, aes(x=created, y=price)) +
+  geom_line() + scale_y_continuous(limits=c(0, 3000))
+
+# the external data, plotted on the same interval:
+ggplot(bdat[bdat$date >= min(dat$date), ], aes(x=date, y=price)) +
+  geom_line() + scale_y_continuous(limits=c(0, 3000))
+
+# the external data, plotted on the whole lifetime of btc:
+ggplot(bdat, aes(x=date, y=price)) +
+  geom_line() + scale_y_continuous(limits=c(0, 3000)) +
+  geom_line(aes(x=date, y=volume/1e6), color="orange") +
+  scale_x_date(date_breaks="6 months") +
+  geom_hline(yintercept=max(bdat$price), color="#8aa8b5", linetype="dashed") +
+  annotate(geom="text", x=as.Date("2017-02-01"), y=max(bdat$price)+100, 
+           color="#8aa8b5", label="all-time high") +
+  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+
+
+# want to merge twitter data with bitcoinity data
+# first need to aggregate twitter data to the day-level
+tdat_simple <- dat %>% 
+  mutate(date=as.character(date)) %>% 
+  select(data_source, date, price) %>% 
+  group_by(data_source, date) %>% summarize(
+  price = mean(price, na.rm=TRUE)
+) %>% data.frame()
+
+bdat_simple <- bdat %>% 
+  filter(date >= min(dat$date)) %>% 
+  select(data_source, date, price) %>% 
+  mutate(date=as.character(date)) %>% 
+  data.frame()
+
+head(tdat_simple, 2); head(bdat_simple, 2)
+
+merged      <- rbind(tdat_simple, bdat_simple)
+merged$date <- as.Date(merged$date)
+
+
+ggplot(merged, aes(x=date, y=price, group=data_source, color=data_source)) +
+  geom_line() + 
+  scale_y_continuous(limits=c(0, 3000)) +
+  scale_x_date(date_breaks="2 weeks") +
+  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1)) +
+  theme(legend.position="top")
+
+# yep, checks out...
+```
+
+
+
+<br><br>
+<hr><hr>
+<br><br>
+
+
+
+
+<link rel="stylesheet" type="text/css"
+href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700">
+
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500" rel="stylesheet">
+
+  <style>
+body {
+  padding: 10px;
+  font-size: 12pt;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1 { 
+  font-size: 20px;
+  color: DarkGreen;
+  font-weight: bold;
+}
+
+h2 { 
+    font-size: 16px;
+    color: green;
+}
+
+h3 { 
+  font-size: 24px;
+  color: green;
+  font-weight: bold;
+}
+
+h4 { 
+  font-size: 18px;
+  color: green;
+  font-weight: bolder;
+  padding-top: 10px;
+}
+
+li {
+  padding: 3px;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+pre {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+p {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+</style>
+
+
+
+<!-- END OF DOCUMENT IS HERE -->
+
