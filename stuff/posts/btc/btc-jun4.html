@@ -193,7 +193,8 @@ dat &lt;- userTimeline(user=&quot;bitcoinprice&quot;, n=3200, excludeReplies=TRU
          num_RT    = retweetCount, 
          is_RT     = isRetweet)                                        %&gt;% 
   # toss everything that's not relevant, arrange as desired
-  select(data_src, date_time, date, hour, day, num_fav, num_RT, is_RT, text)</code></pre>
+  select(data_src,  date_time,  date,   hour,  day, 
+         num_fav,   num_RT,     is_RT,  text)</code></pre>
 <p>The tweets – now in <code>dat$text</code> are completely formulaic, and have the following shape:</p>
 <blockquote>
 <p><span class="citation">@bitcoinprice</span>: The average price of Bitcoin across all exchanges is &lt;dddd.dd&gt; USD</p>
@@ -635,8 +636,7 @@ get_tweets &lt;- function(date, term=&quot;bitcoin&quot;, num=100){
   return(tweets)
 }
 
-# collect tweets &quot;for each date&quot;, convert the collections to a single df
-# (note: we're just setting 'since', bc api won't play nice w small ranges)
+# collect tweets for each date, convert the collections to a single df
 tweets &lt;- twListToDF(sapply(dates, get_tweets))
 
 # apply the same transformations we did to the btc price tweets, to clean them
@@ -651,12 +651,15 @@ tweets &lt;- tweets %&gt;% filter(!isRetweet) %&gt;%
 
 # peep the first couple of rows
 head(tweets, n=2)</code></pre>
-<pre><code>##    data_src           date_time       date hour day num_fav num_RT is_RT
-## 1 KimDotcom 2017-06-03 18:01:05 2017-06-03   18 Sat     825    291 FALSE
-## 2  business 2017-06-04 06:35:03 2017-06-04    6 Sun     147    149 FALSE
-##                                                                                                               text
-## 1                  Bitcoin $2553  ——————  \xed\xa0\xbe\xed\xb5\x82\xed\xa0\xbc\xed\xbd\xbe https://t.co/GuJ2gKCuMO
-## 2 Peach becomes Japan's first airline to accept payment in bitcoin https://t.co/ICrIYF5PaO https://t.co/4oQfGAl4Lq</code></pre>
+<pre><code>##       data_src           date_time       date hour day num_fav num_RT
+## 1    KimDotcom 2017-06-03 18:01:05 2017-06-03   18 Sat     787    273
+## 2 ErikVoorhees 2017-06-02 20:12:03 2017-06-02   20 Fri     354    197
+##   is_RT
+## 1 FALSE
+## 2 FALSE
+##                                                                                                                                        text
+## 1                                           Bitcoin $2553  ——————  \xed\xa0\xbe\xed\xb5\x82\xed\xa0\xbc\xed\xbd\xbe https://t.co/GuJ2gKCuMO
+## 2 Best article on Bitcoin I've seen at ZeroHedge: Projecting The Price Of Bitcoin | Zero Hedge https://t.co/f6dbMhwpcr #finance #blockchain</code></pre>
 <p>Now we can use <code>clf_english</code> to classify the tweets:</p>
 <pre class="r"><code># classify the tweets
 tweets_clf &lt;- ml_classify(text=tweets$text, id=clf_english)
@@ -682,20 +685,20 @@ kable(tweets_tbl)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">negative</td>
-<td align="right">40</td>
-<td align="right">0.06</td>
-<td align="right">0.41</td>
+<td align="right">50</td>
+<td align="right">0.08</td>
+<td align="right">0.49</td>
 </tr>
 <tr class="even">
 <td align="left">neutral</td>
-<td align="right">540</td>
-<td align="right">0.84</td>
+<td align="right">500</td>
+<td align="right">0.85</td>
 <td align="right">0.61</td>
 </tr>
 <tr class="odd">
 <td align="left">positive</td>
-<td align="right">60</td>
-<td align="right">0.09</td>
+<td align="right">40</td>
+<td align="right">0.07</td>
 <td align="right">0.55</td>
 </tr>
 </tbody>
@@ -719,16 +722,22 @@ kable(tweets_confident %&gt;% group_by(label) %&gt;% summarize(
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">negative</td>
+<td align="right">10</td>
+<td align="right">0.02</td>
+<td align="right">0.68</td>
+</tr>
+<tr class="even">
 <td align="left">neutral</td>
 <td align="right">400</td>
 <td align="right">0.91</td>
-<td align="right">0.67</td>
+<td align="right">0.66</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">positive</td>
-<td align="right">40</td>
-<td align="right">0.09</td>
-<td align="right">0.58</td>
+<td align="right">30</td>
+<td align="right">0.07</td>
+<td align="right">0.59</td>
 </tr>
 </tbody>
 </table>
@@ -736,28 +745,12 @@ kable(tweets_confident %&gt;% group_by(label) %&gt;% summarize(
 <p>We should also probably search for related terms, including those with hashtags – for example “#bitcoin”, “btc”, “#btc”, “cryptocurrency”, etc. For now that’s left for future work. Shoot me <a href="mailto:tjleffel@gmail.com">an email</a> if you have some ideas about how this could be done systematically.</p>
 </div>
 </div>
-<div id="btc-related-tweet-sentiment-against-btc-price" class="section level3">
-<h3>3. btc-related tweet sentiment against btc price</h3>
+<div id="btc-related-tweet-sentiment-on-turbulent-btc-days" class="section level3">
+<h3>3. btc-related tweet sentiment on turbulent btc days</h3>
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
-<!-- DOESNT WORK CONSISTENTLY OVER DIFFERENT RUNS... -->
-<!-- Let's identify a handful of days with sharp bitcoin price increases. Then we'll query the twitter API to grab btc-related tweets from those dates (if we're able to!), and we'll get their sentiments classified.  -->
-<!-- Then we'll do the same thing for a handful of days with sharp bitcoin price *decreases*. If the sentiments trend in the same direction as the price changes, then I'd say we have ourselves a starting point for an entirely twitter-drive bitcoin trading bot. If not, back to the drawing board! -->
-<p>There’s a number of ways we could approach the problem of associating sentiment about bitcoin to the price of bitcoin. The nature of the twitter search API limits our strategies severely.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> So here is the basic strategy we will use:</p>
-<ul>
-<li>collapse the price data to the day-level to make things more manageable and to simplify the problem;</li>
-<li>identify some key dates, when the bitcoin price increased or decreased “substantially;”</li>
-<li>query several bitcoin-related different terms over the course of the price data date range;</li>
-<li>tag each tweet according to whether its date is the day (ideally: hour) before one of the “substantial” price change days;</li>
-<li>filter out all the tweets that don’t occur on such days (possibly iterating over previous two steps if this leaves us with too little data);</li>
-<li>separate the tweets into two groups:
-<ul>
-<li><code>inc_tweets</code>: those occurring just before price <em>increases</em>, and</li>
-<li><code>dec_tweets</code>: those occurring just before price <em>decreases</em>.</li>
-</ul></li>
-<li>Then, we use a monkeylearn classifier to measure the sentiment of each set of tweets; and finally,</li>
-<li>compare the sentiment of <code>inc_tweets</code> to that of <code>dec_tweets</code>.</li>
-</ul>
-<p>To make life easier, we’ll start by collapsing the price data to the individual-day level.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<p>Let’s identify a handful of days with sharp bitcoin price increases. Then we’ll query the twitter API to grab btc-related tweets from those dates (if we’re able to!), and we’ll get their sentiments classified.</p>
+<p>Then we’ll do the same thing for a handful of days with sharp bitcoin price <em>decreases</em>. If the sentiments trend in the same direction as the price changes, then I’d say we have ourselves a starting point for an entirely twitter-drive bitcoin trading bot. If not, back to the drawing board!</p>
+<p>To make life easier, we’ll start by collapsing the price data to the individual-day level.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <pre class="r"><code># let's keep `day` around just for kicks
 dat_day &lt;- dat %&gt;% group_by(date, day) %&gt;% summarize(
   price = mean(price, na.rm=TRUE)
@@ -768,234 +761,65 @@ identical(dat_day$date, sort(dat_day$date))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code># get the price change from the previous day
 dat_day$price_change &lt;- round(dat_day$price - lag(dat_day$price))</code></pre>
-<p>Below, we’ll select the set of <span class="math inline">\(n\times2\)</span> dates on which the BTC trading price differed maximally from the previous day: <span class="math inline">\(n\)</span> where it increased the most; and <span class="math inline">\(n\)</span> where it decreased the most. Playing around with different values for <span class="math inline">\(n\)</span> (and different measures of “difference”) will yield different perspectives on the data.</p>
-<p>Let’s start with <span class="math inline">\(n=30\)</span> just for kicks.</p>
-<pre class="r"><code>Ndates &lt;- 30</code></pre>
-<div id="identify-sharpest-increase-days" class="section level4">
-<h4>3.1 identify sharpest <em>increase</em> days</h4>
-<p>Let’s grab the 30 largest increase days:</p>
-<pre class="r"><code># get row indices for Ndates largest increase days
-topN &lt;- order(dat_day$price_change, decreasing=TRUE, na.last=TRUE)[1:Ndates]
-
-# get the date vals for those days
-(inc_days &lt;- as.character(dat_day[topN, ]$date))</code></pre>
-<pre><code>##  [1] &quot;2017-05-25&quot; &quot;2017-05-24&quot; &quot;2017-06-01&quot; &quot;2017-05-09&quot; &quot;2017-06-03&quot;
-##  [6] &quot;2017-05-22&quot; &quot;2017-05-11&quot; &quot;2017-05-19&quot; &quot;2017-05-28&quot; &quot;2017-05-17&quot;
-## [11] &quot;2017-05-04&quot; &quot;2017-05-23&quot; &quot;2017-05-14&quot; &quot;2017-05-02&quot; &quot;2017-05-20&quot;
-## [16] &quot;2017-05-29&quot; &quot;2017-04-03&quot; &quot;2017-05-08&quot; &quot;2017-05-30&quot; &quot;2017-05-21&quot;
-## [21] &quot;2017-05-01&quot; &quot;2017-03-21&quot; &quot;2017-03-28&quot; &quot;2017-03-26&quot; &quot;2017-02-21&quot;
-## [26] &quot;2017-06-02&quot; &quot;2017-02-24&quot; &quot;2017-05-10&quot; &quot;2017-02-01&quot; &quot;2017-03-03&quot;</code></pre>
-<p>For now, we’ll only use the dates but in principle the actual prices could be useful too.</p>
-</div>
-<div id="identify-sharpest-decrease-days" class="section level4">
-<h4>3.2 identify sharpest <em>decrease</em> days</h4>
-<p>Now get the 30 largest decrease days:</p>
-<pre class="r"><code># get row indices for Ndates largest decrease days
-botN &lt;- order(dat_day$price_change, decreasing=FALSE, na.last=TRUE)[1:Ndates]
+<div id="identify-sharp-increase-days-measure-sentiment" class="section level4">
+<h4>3.1 identify sharp <em>increase</em> days + measure sentiment</h4>
+<p>Just use the three largest increase days:</p>
+<pre class="r"><code># get row indices for 3 largest increase days
+top3 &lt;- order(dat_day$price_change, decreasing=TRUE, na.last=TRUE)[1:3]
 
 # get the date vals for those three days
-(dec_days &lt;- as.character(dat_day[botN, ]$date))</code></pre>
-<pre><code>##  [1] &quot;2017-05-27&quot; &quot;2017-05-26&quot; &quot;2017-03-18&quot; &quot;2017-03-17&quot; &quot;2017-03-25&quot;
-##  [6] &quot;2017-05-13&quot; &quot;2017-02-10&quot; &quot;2017-03-08&quot; &quot;2017-05-12&quot; &quot;2017-03-24&quot;
-## [11] &quot;2017-03-11&quot; &quot;2017-05-15&quot; &quot;2017-03-19&quot; &quot;2017-05-31&quot; &quot;2017-02-09&quot;
-## [16] &quot;2017-04-13&quot; &quot;2017-03-07&quot; &quot;2017-03-16&quot; &quot;2017-03-22&quot; &quot;2017-03-09&quot;
-## [21] &quot;2017-03-23&quot; &quot;2017-05-06&quot; &quot;2017-05-16&quot; &quot;2017-02-25&quot; &quot;2017-03-05&quot;
-## [26] &quot;2017-04-05&quot; &quot;2017-01-24&quot; &quot;2017-01-25&quot; &quot;2017-04-14&quot; &quot;2017-02-26&quot;</code></pre>
+(inc_days &lt;- as.character(dat_day[top3, ]$date))</code></pre>
+<pre><code>## [1] &quot;2017-05-25&quot; &quot;2017-05-24&quot; &quot;2017-06-01&quot;</code></pre>
+<p>For now, we’ll only use the dates but in principle the actual prices could be useful too.</p>
 </div>
-<div id="obtain-relevant-tweets-over-the-date-range-of-the-price-data" class="section level4">
-<h4>3.3 obtain relevant tweets over the date-range of the price data</h4>
-<!-- Unfortunately but unsurprisingly, the increase days are basically adjacent to two of the decrease days. Even so, though, we can just request a shitload of tweets, toss the ones that aren't on the target date, and request again. If we do this enough times, we'll end up with a suitable number of tweets for each day. Let's set the threshold at 100.  -->
-<p>We’ll now search for bitcoin-related tweets over the range of dates in our price data. We’d rather just get tweets for specific days of interest, but that’s not feasible with the current querying setup (<em>trust me</em>)…Since we can’t get exactly what we want, we’ll just querying API a bunch of times over the date range we want, filtering out any tweets that don’t come from one of the dates of interest in <code>inc_days</code> or <code>dec_days</code>. <strong>update</strong>: this strategy fails miserably because the search API really only gives you reasonable amounts of data (if any) from the last seven days (see this <a href="https://stackoverflow.com/questions/39992266/error-n-tweets-were-requested-but-the-api-can-only-return-0">stack overflow question</a>, for instance).</p>
-<p>Eventually we’ll have (or pretend to have) “enough” btc-related tweets that were tweeted on one of the days of interest. We’ll then categorize them as belonging to the “increase” or “decrease” category, and then get sentiment scores for them from a monkeylearn classifier. After we get the sentiment classifications, we’ll (informally + impressionistically + if I ever revisit this statistically) assess the relationship between increase/decrease of btc price and the sentiment of the temporally associated tweets. <strong>note</strong><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
-<pre class="r"><code># dates of interest
-dates &lt;- as.character(c(dec_days, inc_days))
+<div id="identify-sharp-decrease-days-measure-sentiment" class="section level4">
+<h4>3.2 identify sharp <em>decrease</em> days + measure sentiment</h4>
+<p>Just use the three largest decrease days:</p>
+<pre class="r"><code># get row indices for 3 largest decrease days
+bot3 &lt;- order(dat_day$price_change, decreasing=FALSE, na.last=TRUE)[1:3]
 
-# terms of interest
-terms &lt;- c(&quot;bitcoin&quot;, &quot;btc&quot;, &quot;#bitcoin&quot;, &quot;#btc&quot;, &quot;#cryptocurrency&quot;,
-           &quot;buy bitcoin&quot;, &quot;sell bitcoin&quot;, &quot;trade bitcoin&quot;)
+# get the date vals for those three days
+(dec_days &lt;- as.character(dat_day[bot3, ]$date))</code></pre>
+<pre><code>## [1] &quot;2017-05-27&quot; &quot;2017-05-26&quot; &quot;2017-03-18&quot;</code></pre>
+</div>
+<div id="obtain-relevant-tweets-for-each-date-of-interest" class="section level4">
+<h4>3.3 obtain relevant tweets for each date of interest</h4>
+<p>Unfortunately but unsurprisingly, the increase days are basically adjacent to two of the decrease days. Even so, though, we can just request a shitload of tweets, toss the ones that aren’t on the target date, and request again. If we do this enough times, we’ll end up with a suitable number of tweets for each day. Let’s set the threshold at 100. In other words, for each day in <code>inc_days</code> and <code>dec_days</code>, we will search for bitcoin-related tweets on that day using the twitter search API. Since it won’t give us exactly what we want, we’ll just keep querying it until we have 100 btc-related tweets per day. Then we’ll measure their sentiment and (informally + impressionistically) assess the relationship.</p>
+<pre class="r"><code>dates &lt;- as.character(c(dec_days, inc_days))
+# we'll just do five iterations and take whatever we get.
+# some fiddling around suggests that ought to give us close to 100 of each date
 
-# collect tweets for each month in the date range, and for each term
-months &lt;- paste0(&quot;2017-0&quot;, 1:6, &quot;-01&quot;)
+# in a perfect world we'd write a while-loop and just wait till our
+# criteria are satisfied...
 
-# container to catch query results
-twitlist &lt;- vector(mode=&quot;list&quot;, length=(length(months)-1) * length(terms))
+# container to catch the query results
+twitlist &lt;- vector(mode=&quot;list&quot;, length=length(dates))
 
-# name each df for easier access
-names(twitlist) &lt;- unlist(lapply(months[1:5], function(x){
-  paste(x, terms, sep=&quot;_&quot;)
-}))
+# collect tweets for each date by calling search api
+for (x in seq_along(dates)){
+  twitlist[[x]] &lt;- searchTwitter(
+      &quot;bitcoin&quot;, n=100, since=dates[x], until=as.character(as.Date(dates[x]) + 1)
+  )
+}
 
-
-
-
-
-# m &lt;- 3; x &lt;- 5
-# loop over months with -1 lag (see since/until)
-for (m in 1:(length(months)-1)){
-  
-  # loop over the terms -- try to grab them all for each month
-  for (x in seq_along(terms)){
-    
-    # make a counter for easier indexing with `twitlist` container
-    cntr &lt;- ((m - 1) * length(terms)) + x
-    
-    # for month m and term x, query x from day before m/01, until last day of m
-    twitlist[[cntr]] &lt;- searchTwitter(
-      searchString=terms[x], n=100,
-      since=as.character(as.Date(months[m])   -1), 
-      until=as.character(as.Date(months[m+1]) -1)
-    )
-  }
-}</code></pre>
-<pre><code>## [1] &quot;Rate limited .... blocking for a minute and retrying up to 119 times ...&quot;
-## [1] &quot;Rate limited .... blocking for a minute and retrying up to 118 times ...&quot;</code></pre>
-<pre class="r"><code># convert the tweet collections to a single df
+# convert the tweet collections to a single df
 pricechange_tweets &lt;- 
   twListToDF(unlist(twitlist)) %&gt;% 
   mutate(date = as.character(date(created))) %&gt;% 
-  # mutate(from_query = names(twitlist)) %&gt;% 
   filter(date %in% dates) %&gt;% data.frame() 
 
-# make sure to filter out all duplicates too 
-pricechange_tweets &lt;- 
-  pricechange_tweets[which(!duplicated(pricechange_tweets$text)), ]</code></pre>
-<p>Now all of the tweets are in a single data frame, with the same structure as the original <span class="citation">@bitcoinprice</span> tweet data from which we extracted the price time-series. We’ll add a column encoding whether the tweet occurred on a “decrease” day or an “increase” day, by referencing the <code>date</code> column of the price data.</p>
-<!-- Well, turns out that just using the search API in this way currently only gets us tweets for four of the six dates we targeted. Fortunately for us, the four we got are evenly distributed between the increase days and the decrease days!  -->
-<pre class="r"><code># the dates we're targeting
-kable(cbind(inc_days, dec_days))</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">inc_days</th>
-<th align="left">dec_days</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">2017-05-25</td>
-<td align="left">2017-05-27</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-24</td>
-<td align="left">2017-05-26</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-06-01</td>
-<td align="left">2017-03-18</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-09</td>
-<td align="left">2017-03-17</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-06-03</td>
-<td align="left">2017-03-25</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-22</td>
-<td align="left">2017-05-13</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-11</td>
-<td align="left">2017-02-10</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-19</td>
-<td align="left">2017-03-08</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-28</td>
-<td align="left">2017-05-12</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-17</td>
-<td align="left">2017-03-24</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-04</td>
-<td align="left">2017-03-11</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-23</td>
-<td align="left">2017-05-15</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-14</td>
-<td align="left">2017-03-19</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-02</td>
-<td align="left">2017-05-31</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-20</td>
-<td align="left">2017-02-09</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-29</td>
-<td align="left">2017-04-13</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-04-03</td>
-<td align="left">2017-03-07</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-08</td>
-<td align="left">2017-03-16</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-30</td>
-<td align="left">2017-03-22</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-21</td>
-<td align="left">2017-03-09</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-01</td>
-<td align="left">2017-03-23</td>
-</tr>
-<tr class="even">
-<td align="left">2017-03-21</td>
-<td align="left">2017-05-06</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-03-28</td>
-<td align="left">2017-05-16</td>
-</tr>
-<tr class="even">
-<td align="left">2017-03-26</td>
-<td align="left">2017-02-25</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-02-21</td>
-<td align="left">2017-03-05</td>
-</tr>
-<tr class="even">
-<td align="left">2017-06-02</td>
-<td align="left">2017-04-05</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-02-24</td>
-<td align="left">2017-01-24</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-10</td>
-<td align="left">2017-01-25</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-02-01</td>
-<td align="left">2017-04-14</td>
-</tr>
-<tr class="even">
-<td align="left">2017-03-03</td>
-<td align="left">2017-02-26</td>
-</tr>
-</tbody>
-</table>
+if (FALSE){
+  # write file interactively first time, so doesn't get written w each compile
+  write.csv(pricechange_tweets, &quot;../../../../btc_tweets.csv&quot;, row.names=FALSE)
+}</code></pre>
+<p>Well, turns out that just using the search API in this way currently only gets us tweets for four of the six dates we targeted. Fortunately for us, the four we got are evenly distributed between the increase days and the decrease days!</p>
+<pre class="r"><code># the six dates we're targeting
+inc_days; dec_days</code></pre>
+<pre><code>## [1] &quot;2017-05-25&quot; &quot;2017-05-24&quot; &quot;2017-06-01&quot;</code></pre>
+<pre><code>## [1] &quot;2017-05-27&quot; &quot;2017-05-26&quot; &quot;2017-03-18&quot;</code></pre>
 <pre class="r"><code># the four that we have data for
 unique(pricechange_tweets$date)</code></pre>
-<pre><code>## [1] &quot;2017-05-30&quot;</code></pre>
+<pre><code>## [1] &quot;2017-05-27&quot; &quot;2017-05-26&quot; &quot;2017-06-01&quot;</code></pre>
 </div>
 <div id="assess-relationship-between-price-and-sentiment" class="section level4">
 <h4>3.4 assess relationship between price and sentiment</h4>
@@ -1026,37 +850,62 @@ kable(inc_tweets_tbl)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">negative</td>
-<td align="right">46</td>
-<td align="right">0.102</td>
-<td align="right">0.509</td>
+<td align="right">12</td>
+<td align="right">0.12</td>
+<td align="right">0.574</td>
 </tr>
 <tr class="even">
 <td align="left">neutral</td>
-<td align="right">340</td>
-<td align="right">0.752</td>
+<td align="right">76</td>
+<td align="right">0.76</td>
 <td align="right">0.609</td>
 </tr>
 <tr class="odd">
 <td align="left">positive</td>
-<td align="right">66</td>
-<td align="right">0.146</td>
-<td align="right">0.545</td>
+<td align="right">12</td>
+<td align="right">0.12</td>
+<td align="right">0.632</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code># NOT EVALUATED HERE...
+<pre class="r"><code># and here's our results for decreasing days!
+dec_tweets_tbl &lt;- dec_tweets_clf %&gt;% group_by(label) %&gt;% summarize(
+  num_preds  = length(label),
+  prop_preds = num_preds / nrow(dec_tweets_clf),
+  avg_prob   = mean(probability, na.rm=TRUE)
+) %&gt;% mutate_if(is.numeric, round, digits=3)
 
-if (nrow(dec_tweets_tbl) &gt; 0){
-  # and here's our results for decreasing days!
-  dec_tweets_tbl &lt;- dec_tweets_clf %&gt;% group_by(label) %&gt;% summarize(
-    num_preds  = length(label),
-    prop_preds = num_preds / nrow(dec_tweets_clf),
-    avg_prob   = mean(probability, na.rm=TRUE)
-  ) %&gt;% mutate_if(is.numeric, round, digits=3)
-  
-  kable(dec_tweets_tbl)
-
-}</code></pre>
+kable(dec_tweets_tbl)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">label</th>
+<th align="right">num_preds</th>
+<th align="right">prop_preds</th>
+<th align="right">avg_prob</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">negative</td>
+<td align="right">19</td>
+<td align="right">0.095</td>
+<td align="right">0.541</td>
+</tr>
+<tr class="even">
+<td align="left">neutral</td>
+<td align="right">158</td>
+<td align="right">0.790</td>
+<td align="right">0.597</td>
+</tr>
+<tr class="odd">
+<td align="left">positive</td>
+<td align="right">23</td>
+<td align="right">0.115</td>
+<td align="right">0.583</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># tag the summaries and then stack them for plotting
 inc_tweets_tbl$event &lt;- &quot;bitcoin_price_increase&quot;
 dec_tweets_tbl$event &lt;- &quot;bitcoin_price_decrease&quot;
@@ -1064,7 +913,11 @@ dec_tweets_tbl$event &lt;- &quot;bitcoin_price_decrease&quot;
 change_tweets_table &lt;- 
   rbind(inc_tweets_tbl, dec_tweets_tbl) 
 
-# function to compute the sentiment ratio (num_pos over num_neg)
+sentiment_ratios &lt;- change_tweets_table %&gt;% 
+  group_by(event) %&gt;% summarize(
+    num_pos = sum(num_preds)
+  )
+
 get_ratio &lt;- function(df, event){
   # number of positive tweets
   num_pos &lt;- 
@@ -1078,8 +931,10 @@ get_ratio &lt;- function(df, event){
 }</code></pre>
 <pre class="r"><code># ratio of positive to negative tweets on BTC price increase days
 (inc_ratio &lt;- get_ratio(df=change_tweets_table, event=&quot;bitcoin_price_increase&quot;))</code></pre>
+<pre><code>## [1] 1</code></pre>
 <pre class="r"><code># ratio of positive to negative tweets on BTC price decrease days
 (dec_ratio &lt;- get_ratio(df=change_tweets_table, event=&quot;bitcoin_price_decrease&quot;))</code></pre>
+<pre><code>## [1] 1.210526</code></pre>
 <p>Welp, looks like the ratio of positive to negative tweets is indeed higher on two of the three days when the price went up the most, compared to two of the three days when the price went down the most!</p>
 <p>That’s a cute fact, but is it a coincidence?! Quite possibly. Also quite possibly not. I think it suggests that the question is worth looking into more rigorously.</p>
 <pre class="r"><code># now plot the results side by side
@@ -1091,7 +946,6 @@ get_ratio &lt;- function(df, event){
 <h3>4. wrapping up + next steps</h3>
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
 <p><strong>The natural next step is to run a couple of quick significance tests to help understand the nature of the result/difference…</strong></p>
-<p>Timing and time-resolution issues are really at the heart of the problem – if something like this hypothetical bot is to be built, its effectiveness will be determined largely by the granularity of its BTC price measurements versus the granularity of its BTC tweet sentiment measurements. Put simply: collapsing data to the day-level is probably waaaay too coarse to be useful for actually anticipating price changes before they happen. But alas, let’s just tell ourselves we’re studying feasibility right now, so that we don’t have to be bothered by such concerns (critical as they may be).</p>
 <p>Here’s a list of some things that are both important for this idea to work, and are also totally mysterious and hard to figure out!</p>
 <ol style="list-style-type: decimal">
 <li><p>What is the direction of causation between tweet sentiment and price? e.g. do people freak out and that causes prices to go down, or do prices go down for other reasons and then that gets reflected in people’s tweets? Interesting questions but elusive! Relative timing issues are super important here – see point 2. for discussion.</p></li>
@@ -1104,7 +958,6 @@ get_ratio &lt;- function(df, event){
 <ol start="3" style="list-style-type: decimal">
 <li><p>How can we get a higher-quality sentiment classifier?! (without having to write one myself!) In other words, if you’re an NLP guru interested in this stuff, <a href="mailto:tjleffel@gmail.com">shoot me an email</a></p></li>
 <li><p>What even is the nature of the signal?! A lot of the stuff you see in these tweets reads like an ad, so the degree to which these tweets can even be used to measure “public sentiment” or even “sentiment” about bitcoin might be kind of questionable in the first place. To be continued…maybe.</p></li>
-<li><p>What’s the best way to measure “sentiment”? How do we use random samples of btc-related tweets to establsish a kind of baseline, against which tweets from dates of interest can be evaluated.</p></li>
 </ol>
 <br><br>
 <hr>
@@ -1175,9 +1028,7 @@ p {
 <li id="fn1"><p><strong>exercise</strong>: what does this suggest about how the <span class="citation">@bitcoinprice</span> bot works?!<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>note: <code>ml_classify()</code> assumes that the global variable <code>ml_key</code> is set to a valid monkeylearn API key. If it’s not, you won’t be able to send queries :/<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>Whether that should count as “likely” at all in the first place is definitely debatable. Buuuut let’s just assume it gives us a legitimate measure of positivity/negativity – if we find a much better classifier in the future, we can just sub it in and then we’ll have results we can trust better.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>shoot me <a href="mailto:tjleffel@gmail.com">an email</a> if you want to hear about the other strategies that are way better conceptually but just don’t work in practice (given the current tools I’m using).<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>I think the mean over each hourly tweet should be fine; maybe median could give us a slightly different perspective. Not sure, but worth thinking about some more.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>Querying specific date ranges doesn’t return enough results…In other words, looping over dates and setting the <code>since</code> and <code>until</code> arguments of <code>searchTwitter()</code> as <code>since=as.character(as.Date(dates[x]) - 1)</code> and <code>until=dates[x]</code> will work sometimes but it isn’t guaranteed to give you data for all dates. If you then just query over and over, you’ll either just get the same tweets back over and over, or you’ll get rate blocked by twitter!<a href="#fnref6">↩</a></p></li>
+<li id="fn4"><p>I think the mean over each hourly tweet should be fine; maybe median could give us a slightly different perspective. Not sure, but worth thinking about some more.<a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
 

@@ -102,7 +102,8 @@ dat <- userTimeline(user="bitcoinprice", n=3200, excludeReplies=TRUE)  %>%
          num_RT    = retweetCount, 
          is_RT     = isRetweet)                                        %>% 
   # toss everything that's not relevant, arrange as desired
-  select(data_src, date_time, date, hour, day, num_fav, num_RT, is_RT, text)
+  select(data_src,  date_time,  date,   hour,  day, 
+         num_fav,   num_RT,     is_RT,  text)
   
 ```
 
@@ -133,23 +134,18 @@ if (sum(grepl("[a-z]", dat$price)) > 0){
 dat$price <- as.numeric(dat$price)
 ```
 
-```{r include=FALSE}
-rm(toss)
-```
-
-
 Quick inspection reveals that there's something anomalous about one of the tweets: on 2017-03-14 15:00:03, @bitcoinprice says the average trading price is \$1.25. A cursory glance at the surrounding data points suggests that it's probably meant to be \$1225.00.[^1]
 
 [^1]: **exercise**: what does this suggest about how the @bitcoinprice bot works?!
 
-```{r fix_error}
+```{r}
 # fix the incorrect data point
 dat$price[dat$price==1.25] <- dat$price[dat$price==1.25] * 1000
 ```
 
 And make a quick table for a final quality check -- seems reasonable for the last 4-ish months of BTC pricing. 
 
-```{r btc_price_distribution}
+```{r}
 kable(table(cut(dat$price, breaks=seq(0, max(dat$price), 500))),
       col.names=c("price range (USD)","count"))
 ```
@@ -181,11 +177,6 @@ ggplot(pdat, aes(x=hour, y=mean_price)) +
 ```
 
 
-```{r include=FALSE}
-rm(pdat)
-```
-
-
 #### inspect + validate accuracy on external data_src
 
 Just to make sure our prices are accurate, we can validate them on an external source of data. Here we'll use [bitcoinity.org](make a quick table for a final quality check -- seems reasonable), which offers a nice little data export feature on the price-tracking portion of their website. 
@@ -204,7 +195,7 @@ kable(head(bitcoinity, n=4))
 
 Now plot the bitcoinity data on the same interval as the @bitcoinprice data. The result is sparser than the above plot since there's fewer data points per 24-hr period, but the pattern looks identical. Nice. 
 
-```{r plot_ext_data_on_dat_interval}
+```{r}
 # the external data, plotted on the same interval as `dat` above:
 ggplot(bitcoinity[bitcoinity$date >= min(dat$date), ], aes(x=date, y=price)) +
   geom_line() + scale_y_continuous(limits=c(0, 3000))
@@ -213,7 +204,7 @@ ggplot(bitcoinity[bitcoinity$date >= min(dat$date), ], aes(x=date, y=price)) +
 
 Just for reference, here's the trajectory of BTC since the very beginning (fml can't believe I didn't get in when I first heard about BTC back in 2011 :/). There's also a trading volume column in the bitcoinity data, which we'll plot in orange in the same window. 
 
-```{r plot_ext_data}
+```{r}
 # want to display the all-time high price and date
 fig_cap <- paste0(
   "all-time high: $", round(max(bitcoinity$price)), ", on ",
@@ -236,14 +227,9 @@ ggplot(bitcoinity, aes(x=date, y=price)) +
        caption="(trading volume in orange)")
 ``` 
 
-```{r include=FALSE}
-rm(fig_cap)
-```
-
-
 Everything looks fine, but to be totally sure we can merge the external data with the tweeted price data, and plot them against each other. 
 
-```{r aggregate_btcprice_plot}
+```{r}
 # first aggregate @bitcoinprice data to the day-level
 tdat_simple <- dat %>% 
   mutate(date=as.character(date)) %>% 
@@ -293,12 +279,6 @@ ggplot(merged_zoom, aes(x=date, y=price, group=data_src, color=data_src)) +
   annotate("text", x=unique(merged_zoom$date), y=2500, 
            label=paste0("$", abs(price_diffs), " diff"))
 ```
-
-```{r include=FALSE}
-rm(tdat_simple); rm(bitcoinity); rm(bitcoinity_simple)
-rm(merged); rm(merged_zoom); rm(price_diffs)
-```
-
 
 Interesting...The prices don't vary too much, but with automated trading, I imagine one could take huge advantage of knowing about the relative accuracy of different price reporting systems. Another thing to consider is that @bitcoinprice and bitcoinity.org draw samples at slightly different times. Given the volatility of bitcoin pricing, I'd say that even a difference of \$17 at a given date is well within a reasonable margin for measurement error.
 
@@ -371,7 +351,6 @@ unabomber_english_clf <- ml_classify(unabomber_manif, id=clf_english)
 unabomber_multilg_clf <- ml_classify(unabomber_manif, id=clf_multilg)
 ```
 
-
 Now make a quick table summarizing the Unabomber Manifesto results for each classifier.
 
 ```{r}
@@ -428,23 +407,12 @@ sos_tbl_multilg <- songos_multilg_clf %>% group_by(label) %>% summarize(
 ) %>% mutate_if(is.numeric, round, digits=2) %>% mutate(clf = "clf_multilg")
 ```
 
-
 The results here are less clear than in the previous case. But still, the multilingual classifier thinks ~30% of SoS is "negative." In light of that and in light of its apparent avoidance of the `Neutral` label, I'd say we can safely conclude that the English-only classifier is more likely to give us what we want.[^3] 
 
 [^3]: Whether that should count as "likely" at all in the first place is definitely debatable. Buuuut let's just assume it gives us a legitimate measure of positivity/negativity -- if we find a much better classifier in the future, we can just sub it in and then we'll have results we can trust better.
 
 ```{r}
 kable(rbind(sos_tbl_english, sos_tbl_multilg))
-```
-
-
-
-```{r cleanup_intermediate, include=FALSE}
-rm(unabomber_manif); rm(unabomber_english_clf); rm(unabomber_multilg_clf)
-rm(song_of_solomon); rm(songos_english_clf); rm(songos_multilg_clf)
-
-rm(una_tbl_english); rm(una_tbl_multilg)
-rm(sos_tbl_english); rm(sos_tbl_multilg)
 ```
 
 
@@ -462,8 +430,7 @@ get_tweets <- function(date, term="bitcoin", num=100){
   return(tweets)
 }
 
-# collect tweets "for each date", convert the collections to a single df
-# (note: we're just setting 'since', bc api won't play nice w small ranges)
+# collect tweets for each date, convert the collections to a single df
 tweets <- twListToDF(sapply(dates, get_tweets))
 
 # apply the same transformations we did to the btc price tweets, to clean them
@@ -479,7 +446,6 @@ tweets <- tweets %>% filter(!isRetweet) %>%
 # peep the first couple of rows
 head(tweets, n=2)
 ```
-
 
 Now we can use `clf_english` to classify the tweets: 
 
@@ -500,7 +466,7 @@ kable(tweets_tbl)
 
 Interesting -- we're getting around 85% "neutral" classifications, with a decent average degree of confidence...What if we filter out all rows with less than, say, 50% confidence?
 
-```{r confident_tweets}
+```{r}
 tweets_confident <- tweets_clf %>% filter(probability > .5)
 
 kable(tweets_confident %>% group_by(label) %>% summarize(
@@ -510,40 +476,25 @@ kable(tweets_confident %>% group_by(label) %>% summarize(
 ) %>% mutate_if(is.numeric, round, digits=2))
 ```
 
-
-```{r include=FALSE}
-rm(tweets); rm(tweets_clf); rm(tweets_tbl); rm(tweets_confident)
-```
-
 Not a whole lot more illuminating, and this ate up a lot of our sample. So, acknowledging that we live in an imperfect world, we'll just go with the raw classifications. Eventually we'd want to define a sentiment metric given a table of classifications like the ones we get from `ml_classify()`. But the output is simple enough that we can just eyeball it and quasi-subjectively evaluate whether what we get is reasonable. 
 
 We should also probably search for related terms, including those with hashtags -- for example "#bitcoin", "btc", "#btc", "cryptocurrency", etc. For now that's left for future work. Shoot me [an email](mailto:tjleffel@gmail.com) if you have some ideas about how this could be done systematically. 
 
 
-### 3. btc-related tweet sentiment against btc price
+### 3. btc-related tweet sentiment on turbulent btc days
 
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
 
-<!-- DOESNT WORK CONSISTENTLY OVER DIFFERENT RUNS... -->
-<!-- Let's identify a handful of days with sharp bitcoin price increases. Then we'll query the twitter API to grab btc-related tweets from those dates (if we're able to!), and we'll get their sentiments classified.  -->
-<!-- Then we'll do the same thing for a handful of days with sharp bitcoin price *decreases*. If the sentiments trend in the same direction as the price changes, then I'd say we have ourselves a starting point for an entirely twitter-drive bitcoin trading bot. If not, back to the drawing board! -->
+Let's identify a handful of days with sharp bitcoin price increases. Then we'll query the twitter API to grab btc-related tweets from those dates (if we're able to!), and we'll get their sentiments classified. 
 
-There's a number of ways we could approach the problem of associating sentiment about bitcoin to the price of bitcoin. The nature of the twitter search API limits our strategies severely.[^4] So here is the basic strategy we will use: 
+Then we'll do the same thing for a handful of days with sharp bitcoin price *decreases*. If the sentiments trend in the same direction as the price changes, then I'd say we have ourselves a starting point for an entirely twitter-drive bitcoin trading bot. If not, back to the drawing board!
 
-- collapse the price data to the day-level to make things more manageable and to simplify the problem; 
-- identify some key dates, when the bitcoin price increased or decreased "substantially;" 
-- query several bitcoin-related different terms over the course of the price data date range; 
-- tag each tweet according to whether its date is the day (ideally: hour) before one of the "substantial" price change days;
-- filter out all the tweets that don't occur on such days (possibly iterating over previous two steps if this leaves us with too little data); 
-- separate the tweets into two groups: 
-    + `inc_tweets`: those occurring just before price *increases*, and 
-    + `dec_tweets`: those occurring just before price *decreases*.
-- Then, we use a monkeylearn classifier to measure the sentiment of each set of tweets; and finally, 
-- compare the sentiment of `inc_tweets` to that of `dec_tweets`.
+To make life easier, we'll start by collapsing the price data to the individual-day level.[^4] 
 
-To make life easier, we'll start by collapsing the price data to the individual-day level.[^5] 
 
-```{r calculate_change}
+[^4]: I think the mean over each hourly tweet should be fine; maybe median could give us a slightly different perspective. Not sure, but worth thinking about some more. 
+
+```{r}
 # let's keep `day` around just for kicks
 dat_day <- dat %>% group_by(date, day) %>% summarize(
   price = mean(price, na.rm=TRUE)
@@ -557,129 +508,72 @@ identical(dat_day$date, sort(dat_day$date))
 dat_day$price_change <- round(dat_day$price - lag(dat_day$price))
 ```
 
-Below, we'll select the set of $n\times2$ dates on which the BTC trading price differed maximally from the previous day: $n$ where it increased the most; and $n$ where it decreased the most. Playing around with different values for $n$ (and different measures of "difference") will yield different perspectives on the data.
 
-Let's start with $n=30$ just for kicks. 
+#### 3.1 identify sharp *increase* days + measure sentiment
 
-```{r set_numdates}
-Ndates <- 30
-```
+Just use the three largest increase days:
+```{r}
+# get row indices for 3 largest increase days
+top3 <- order(dat_day$price_change, decreasing=TRUE, na.last=TRUE)[1:3]
 
-
-#### 3.1 identify sharpest *increase* days 
-
-Let's grab the `r Ndates` largest increase days:
-
-```{r get_inc_days}
-# get row indices for Ndates largest increase days
-topN <- order(dat_day$price_change, decreasing=TRUE, na.last=TRUE)[1:Ndates]
-
-# get the date vals for those days
-(inc_days <- as.character(dat_day[topN, ]$date))
+# get the date vals for those three days
+(inc_days <- as.character(dat_day[top3, ]$date))
 ```
 
 For now, we'll only use the dates but in principle the actual prices could be useful too. 
 
-#### 3.2 identify sharpest *decrease* days 
+#### 3.2 identify sharp *decrease* days + measure sentiment
 
-Now get the `r Ndates` largest decrease days:
-
-```{r get_dec_days}
-# get row indices for Ndates largest decrease days
-botN <- order(dat_day$price_change, decreasing=FALSE, na.last=TRUE)[1:Ndates]
+Just use the three largest decrease days:
+```{r}
+# get row indices for 3 largest decrease days
+bot3 <- order(dat_day$price_change, decreasing=FALSE, na.last=TRUE)[1:3]
 
 # get the date vals for those three days
-(dec_days <- as.character(dat_day[botN, ]$date))
+(dec_days <- as.character(dat_day[bot3, ]$date))
 ```
 
-```{r include=FALSE}
-rm(Ndates); rm(topN); rm(botN)
-```
+#### 3.3 obtain relevant tweets for each date of interest
 
-
-#### 3.3 obtain relevant tweets over the date-range of the price data
-
-<!-- Unfortunately but unsurprisingly, the increase days are basically adjacent to two of the decrease days. Even so, though, we can just request a shitload of tweets, toss the ones that aren't on the target date, and request again. If we do this enough times, we'll end up with a suitable number of tweets for each day. Let's set the threshold at 100.  -->
-
-We'll now search for bitcoin-related tweets over the range of dates in our price data. We'd rather just get tweets for specific days of interest, but that's not feasible with the current querying setup (*trust me*)...Since we can't get exactly what we want, we'll just querying API a bunch of times over the date range we want, filtering out any tweets that don't come from one of the dates of interest in `inc_days` or `dec_days`. **update**: this strategy fails miserably because the search API really only gives you reasonable amounts of data (if any) from the last seven days (see this [stack overflow question](https://stackoverflow.com/questions/39992266/error-n-tweets-were-requested-but-the-api-can-only-return-0), for instance).
-
-Eventually we'll have (or pretend to have) "enough" btc-related tweets that were tweeted on one of the days of interest. We'll then categorize them as belonging to the "increase" or "decrease" category, and then get sentiment scores for them from a monkeylearn classifier. After we get the sentiment classifications, we'll (informally + impressionistically + if I ever revisit this statistically) assess the relationship between increase/decrease of btc price and the sentiment of the temporally associated tweets. **note**[^6] 
-
-[^6]: Querying specific date ranges doesn't return enough results...In other words, looping over dates and setting the `since` and `until` arguments of `searchTwitter()` as `since=as.character(as.Date(dates[x]) - 1)` and `until=dates[x]` will work sometimes but it isn't guaranteed to give you data for all dates. If you then just query over and over, you'll either just get the same tweets back over and over, or you'll get rate blocked by twitter!
-
+Unfortunately but unsurprisingly, the increase days are basically adjacent to two of the decrease days. Even so, though, we can just request a shitload of tweets, toss the ones that aren't on the target date, and request again. If we do this enough times, we'll end up with a suitable number of tweets for each day. Let's set the threshold at 100. In other words, for each day in `inc_days` and `dec_days`, we will search for bitcoin-related tweets on that day using the twitter search API. Since it won't give us exactly what we want, we'll just keep querying it until we have 100 btc-related tweets per day. Then we'll measure their sentiment and (informally + impressionistically) assess the relationship.
 
 ```{r get_changetweets, cache=FALSE}
-# dates of interest
 dates <- as.character(c(dec_days, inc_days))
+# we'll just do five iterations and take whatever we get.
+# some fiddling around suggests that ought to give us close to 100 of each date
 
-# terms of interest
-terms <- c("bitcoin", "btc", "#bitcoin", "#btc", "#cryptocurrency",
-           "buy bitcoin", "sell bitcoin", "trade bitcoin")
+# in a perfect world we'd write a while-loop and just wait till our
+# criteria are satisfied...
 
-# collect tweets for each month in the date range, and for each term
-months <- paste0("2017-0", 1:6, "-01")
+# container to catch the query results
+twitlist <- vector(mode="list", length=length(dates))
 
-# container to catch query results
-twitlist <- vector(mode="list", length=(length(months)-1) * length(terms))
-
-# name each df for easier access
-names(twitlist) <- unlist(lapply(months[1:5], function(x){
-  paste(x, terms, sep="_")
-}))
-
-
-
-
-
-# m <- 3; x <- 5
-# loop over months with -1 lag (see since/until)
-for (m in 1:(length(months)-1)){
-  
-  # loop over the terms -- try to grab them all for each month
-  for (x in seq_along(terms)){
-    
-    # make a counter for easier indexing with `twitlist` container
-    cntr <- ((m - 1) * length(terms)) + x
-    
-    # for month m and term x, query x from day before m/01, until last day of m
-    twitlist[[cntr]] <- searchTwitter(
-      searchString=terms[x], n=100,
-      since=as.character(as.Date(months[m])   -1), 
-      until=as.character(as.Date(months[m+1]) -1)
-    )
-  }
+# collect tweets for the day preceding each date by querying search api
+for (x in seq_along(dates)){
+  twitlist[[x]] <- searchTwitter(
+      searchString="bitcoin", n=100, 
+      since=dates[x], until=as.character(as.Date(dates[x]) + 1)
+  )
 }
 
 # convert the tweet collections to a single df
 pricechange_tweets <- 
   twListToDF(unlist(twitlist)) %>% 
   mutate(date = as.character(date(created))) %>% 
-  # mutate(from_query = names(twitlist)) %>% 
   filter(date %in% dates) %>% data.frame() 
 
-# make sure to filter out all duplicates too 
-pricechange_tweets <- 
-  pricechange_tweets[which(!duplicated(pricechange_tweets$text)), ]
+if (FALSE){
+  # write file interactively first time, so doesn't get written w each compile
+  write.csv(pricechange_tweets, "../../../../btc_tweets.csv", row.names=FALSE)
+}
 
 ```
 
-
-Now all of the tweets are in a single data frame, with the same structure as the original @bitcoinprice tweet data from which we extracted the price time-series. We'll add a column encoding whether the tweet occurred on a "decrease" day or an "increase" day, by referencing the `date` column of the price data.
-
-
-```{r include=FALSE}
-# rm(twitlist); rm(x)
-# since=as.character(as.Date(min(dates)) - 1), 
-# until=as.character(as.Date(max(dates)) - 10)
-
-```
-
-
-<!-- Well, turns out that just using the search API in this way currently only gets us tweets for four of the six dates we targeted. Fortunately for us, the four we got are evenly distributed between the increase days and the decrease days!  -->
+Well, turns out that just using the search API in this way currently only gets us tweets for four of the six dates we targeted. Fortunately for us, the four we got are evenly distributed between the increase days and the decrease days! 
 
 ```{r}
-# the dates we're targeting
-kable(cbind(inc_days, dec_days))
+# the six dates we're targeting
+inc_days; dec_days
 
 # the four that we have data for
 unique(pricechange_tweets$date)
@@ -700,7 +594,7 @@ dec_tweets_clf <- ml_classify(text=dec_tweets$text, id=clf_english)
 
 
 
-```{r show_incdays_sentiment}
+```{r}
 # display results for increasing days
 inc_tweets_tbl <- inc_tweets_clf %>% group_by(label) %>% summarize(
   num_preds  = length(label),
@@ -712,25 +606,19 @@ kable(inc_tweets_tbl)
 ```
 
 
-```{r show_decdays_sentiment, eval=FALSE}
+```{r}
+# and here's our results for decreasing days!
+dec_tweets_tbl <- dec_tweets_clf %>% group_by(label) %>% summarize(
+  num_preds  = length(label),
+  prop_preds = num_preds / nrow(dec_tweets_clf),
+  avg_prob   = mean(probability, na.rm=TRUE)
+) %>% mutate_if(is.numeric, round, digits=3)
 
-# NOT EVALUATED HERE...
-
-if (nrow(dec_tweets_tbl) > 0){
-  # and here's our results for decreasing days!
-  dec_tweets_tbl <- dec_tweets_clf %>% group_by(label) %>% summarize(
-    num_preds  = length(label),
-    prop_preds = num_preds / nrow(dec_tweets_clf),
-    avg_prob   = mean(probability, na.rm=TRUE)
-  ) %>% mutate_if(is.numeric, round, digits=3)
-  
-  kable(dec_tweets_tbl)
-
-}
+kable(dec_tweets_tbl)
 ```
 
 
-```{r eval=FALSE}
+```{r}
 # tag the summaries and then stack them for plotting
 inc_tweets_tbl$event <- "bitcoin_price_increase"
 dec_tweets_tbl$event <- "bitcoin_price_decrease"
@@ -738,7 +626,11 @@ dec_tweets_tbl$event <- "bitcoin_price_decrease"
 change_tweets_table <- 
   rbind(inc_tweets_tbl, dec_tweets_tbl) 
 
-# function to compute the sentiment ratio (num_pos over num_neg)
+sentiment_ratios <- change_tweets_table %>% 
+  group_by(event) %>% summarize(
+    num_pos = sum(num_preds)
+  )
+
 get_ratio <- function(df, event){
   # number of positive tweets
   num_pos <- 
@@ -753,12 +645,12 @@ get_ratio <- function(df, event){
 ```
 
 
-```{r eval=FALSE}
+```{r}
 # ratio of positive to negative tweets on BTC price increase days
 (inc_ratio <- get_ratio(df=change_tweets_table, event="bitcoin_price_increase"))
 ```
 
-```{r eval=FALSE}
+```{r}
 # ratio of positive to negative tweets on BTC price decrease days
 (dec_ratio <- get_ratio(df=change_tweets_table, event="bitcoin_price_decrease"))
 ```
@@ -775,20 +667,12 @@ That's a cute fact, but is it a coincidence?! Quite possibly. Also quite possibl
 ```
 
 
-```{r eval=FALSE, include=FALSE}
-rm(inc_tweets); rm(dec_tweets); rm(inc_tweets_clf); rm(dec_tweets_clf); 
-rm(inc_tweets_tbl); rm(dec_tweets_tbl)
-```
-
 
 ### 4. wrapping up + next steps
 
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
 
 **The natural next step is to run a couple of quick significance tests to help understand the nature of the result/difference...**
-
-Timing and time-resolution issues are really at the heart of the problem -- if something like this hypothetical bot is to be built, its effectiveness will be determined largely by the granularity of its BTC price measurements versus the granularity of its BTC tweet sentiment measurements. Put simply: collapsing data to the day-level is probably waaaay too coarse to be useful for actually anticipating price changes before they happen. But alas, let's just tell ourselves we're studying feasibility right now, so that we don't have to be bothered by such concerns (critical as they may be).
-
 
 Here's a list of some things that are both important for this idea to work, and are also totally mysterious and hard to figure out! 
 
@@ -803,14 +687,6 @@ Relevant to this issue is the following quote (which might be outdated at this p
 3.  How can we get a higher-quality sentiment classifier?! (without having to write one myself!) In other words, if you're an NLP guru interested in this stuff, [shoot me an email](mailto:tjleffel@gmail.com)
 
 4. What even is the nature of the signal?! A lot of the stuff you see in these tweets reads like an ad, so the degree to which these tweets can even be used to measure "public sentiment" or even "sentiment" about bitcoin might be kind of questionable in the first place. To be continued...maybe.
-
-5. What's the best way to measure "sentiment"? How do we use random samples of btc-related tweets to establsish a kind of baseline, against which tweets from dates of interest can be evaluated. 
-
-
-[^4]: shoot me [an email](mailto:tjleffel@gmail.com) if you want to hear about the other strategies that are way better conceptually but just don't work in practice (given the current tools I'm using).
-
-[^5]: I think the mean over each hourly tweet should be fine; maybe median could give us a slightly different perspective. Not sure, but worth thinking about some more. 
-
 
 
 
