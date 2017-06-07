@@ -24,7 +24,7 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE)
 <hr style="height:2px; background-color: gray; color:gray;">
 
 
-The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we'll only use data publicly available via the twitter API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only the standard twitter API tools (to my knowledge, at least). A scaled-up (and idealized) version of this strategy would use firehose output for bitcoin-related keywords at particular time intervals during which bitcoin trading prices are volatile. 
+The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we'll only use data publicly available via the twitter search API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only the standard search tools (and without third-parties). A scaled-up (and idealized) version of this strategy might use historical firehose data to systematically extract bitcoin-related tweets at particular time intervals during which (or just before which) bitcoin trading prices are independently known to be volatile. 
 
 
 linxe to put in final post:
