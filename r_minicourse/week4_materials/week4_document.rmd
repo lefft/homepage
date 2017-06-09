@@ -43,6 +43,7 @@ After the header is the main body of the document, which mostly just contains te
 
 #### inline R code
 
+[MAKE POINT ABOUT SETTING OPTIONS...]
 
 [DESCRIBE INLINE R CODE HERE]
 

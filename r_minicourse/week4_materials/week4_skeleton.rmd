@@ -1,0 +1,169 @@
+---
+title: "a skeleton to fill in with your own content!"
+author: "your name"
+output: html_document
+---
+
+<!-- notice that comments are in html format here.** 
+     if the output type was 'pdf_document', we'd be using 
+     LaTeX style for comments (i.e. start line with %) -->
+
+## 1. setting things up
+
+### 1.1 set global chunk options and load packages
+
+Here's a setup chunk, which won't appear in the output because it has the chunk option `include=FALSE`. 
+
+```{r setup, include=FALSE}
+# **but comments inside a code chunk are normal R style
+
+# echo=TRUE: the code you type in a chunk will appear in the output
+knitr::opts_chunk$set(echo=TRUE) 
+
+# another useful one when you're learning:
+# tidy=TRUE: auto-formats code in output so that it's nicely indented etc.
+#            (note: this will give you R Studio's preferred code format)
+
+
+# notice that this chunk has the option include=FALSE
+# this means that it won't show up in the output 
+# (since it's not really "content", but just controls output)
+```
+
+Now we load a few packages that we'll use below. We specify `message=FALSE` and `warning=FALSE` on this one so that we don't get the annoying package startup messages:
+
+```{r attach_packages, message=FALSE, warning=FALSE}
+library("dplyr"); library("reshape2"); library("ggplot2"); library("ggthemes")
+
+# also set the ggplot2 theme to something nicer than the default
+theme_set(theme_fivethirtyeight(base_size=16))
+```
+
+
+### 1.2 read in dataset and inspect
+
+Here we read in a dataset from a url and inspect the first few rows:
+
+```{r}
+# using two lines so the url doesn't overflow 
+# (maximum of 80 characters per line of code is a nice cutoff point)
+link <- paste0("http://lefft.xyz/r_minicourse/",
+               "datasets/top5k-word-frequency-dot-info.csv")
+
+dat <- read.csv(link, stringsAsFactors=FALSE)
+
+head(dat, n=5)
+```
+
+
+### 1.3 clean up dataset as desired
+
+Let's change the column names just for demo purposes:
+
+```{r}
+names(dat) <- c("rank","word","part_of_speech","frequency","dispersion")
+```
+
+And then let's recode part of speech so that we can look at it and understand what it means...
+
+```{r}
+# see what the unique vals of `part_of_speech` are
+unique(dat$part_of_speech)
+```
+
+But there's a problem: we don't know the corresepondence between the part of speech tags and what they stand for! We can get a hint by using the following (**google `sapply()` -- extremely useful** -- it basically does the same kind of work that a `for`-loop would do)
+
+```{r}
+# see a few examples of each 
+sapply(unique(dat$part_of_speech), function(x){
+  paste0(x, " ", dat$word[dat$part_of_speech==x][1:3])
+})
+```
+
+Now we can recode it with a named vector as a "lookup table", as we have in similar cases in the past:
+```{r}
+# set the "key-value" pairs
+pos_lkup <- c(
+  a="article", v="verb", c="conjunction/coordinator", i="preposition",
+  t="infinitive 'to'", p="pronoun", d="determiner", x="negation", r="adverb",
+  m="number (cardinal/ordinal/etc.)", n="noun", e="expletive 'there'", 
+  j="adjective", u="particle"
+)
+
+# reassign `$part_of_speech` to the clean values, matching by the current ones
+dat$part_of_speech <- 
+  as.character(pos_lkup[match(dat$part_of_speech, names(pos_lkup))])
+```
+
+
+Ahhh, much better:
+
+```{r}
+knitr::kable(head(dat, n=5))
+```
+
+
+## 2. summarize and visualize columns of interest
+
+Let's look at the relationship between `dat$frequency` and `dat$rank`, for each part of speech. (yayy, five thirty eight theme via `ggthemes::`!)
+
+```{r}
+# distribution of pos's
+table(dat$part_of_speech, useNA="ifany")
+```
+
+To simplify things, let's just look at nouns, verbs, adjectives, and adverbs.
+
+```{r}
+# **this can be done equivalently a number of ways -- what are some others?**
+dat <- subset(dat, part_of_speech %in% c("noun","verb","adjective","adverb"))
+```
+
+
+```{r plotz, fig.width=9, fig.height=6, out.width='48%', fig.show="hold"}
+# force them to be side-by-side
+# par(mfrow=c(1,2)) 
+
+# distribution of frequency by part of speech
+ggplot(dat, aes(x=part_of_speech, y=frequency)) +
+  geom_boxplot() + 
+  theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
+  labs(title="word frequency by part of speech",
+       subtitle="for 5000 most frequent words in COCA")
+
+# distribution of rank by part of speech
+ggplot(dat, aes(x=part_of_speech, y=rank)) +
+  geom_boxplot() + 
+  theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1)) +
+  labs(title="frequency rank by part of speech",
+       subtitle="for 5000 most frequent words in COCA")
+```
+
+**note**: here's the corresponding commands to create these plots with base graphics (this chunk is not evaluated because of the chunk option `eval=FALSE`; but it is displayed because we set `echo=TRUE` in the setup chunk):
+
+```{r base_plotz, eval=FALSE}
+# same as above plots, but with base graphics
+boxplot(frequency ~ part_of_speech, data=dat)
+boxplot(rank ~ part_of_speech, data=dat)
+```
+
+
+### 2.1 display summary tables
+
+
+### 2.2 display some plots
+
+
+## 3 perform some analysis (if desired)
+
+### 3.1 check that data has necessary shape/format
+
+### 3.2 fit a regression model to the data 
+
+### 3.3 evaluate the fit with summary statistics (informal)
+
+
+
+
+## 6. summarize the findings
+that's all folks! use `ctrl+shift+k` to create the output file `template.html`
