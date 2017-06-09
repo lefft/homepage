@@ -1,0 +1,232 @@
+---
+title: "week4 document"
+author: "timothy leffel"
+date: "6/8/2017"
+output: html_document
+---
+
+### a tale of two files: the source and the output
+
+Whenever you're using R Markdown, there's two documents involved: 
+
+- the **source** document, which has extension `.rmd`/`.Rmd`,[^1]  and 
+- the **output** document, whose extension depends on what you want it to be.[^2] 
+
+
+[^1]: or in rare cases something else like `.rnw`. 
+
+[^2]: Though note that if you want pdf output, you'll need to have $\LaTeX$ installed; [here](LINK)'s a link to get you started. If you don't want to mess with that or if you're in a hurry, just use html output and then "print" as a pdf from Google Chrome (which has very nice pdf printing options for webpages). R Markdown html output can actually be made to look quite good when printed as pdf. *That said*, $\LaTeX$ is awesome and well worth learning. 
+
+A concrete example: I'm currently typing into the document `week4_document.rmd` from the script editor in R Studio. If I use the keyboard shortcut `cmd+shift+k`, the document will get "knitted," and the output document will get created in the same directory as the source document is in. 
+
+What happens when you knit a document is approximately the following: 
+
+- a new R session (that doesn't affect your current one) is launched; 
+- in that new session, all of the R code in the source document is executed, starting at the top of the document and ending at the bottom; 
+- the results of each R chunk are held on to, 
+- a new file is created from some kind of default template, with whatever filetype the YAML header `output` field says (e.g. html or docx),
+- all the normal text with markdown formatting is converted to the corresponding text/formatting in whatever the output format is, and stuck into the output file, - the R code and console output are also converted to an appropriate format for the output file, and then injected into the part of the document they're meant to be in.  
+
+
+The output file in this case is `week4_document.html`, because that's what I specified in the header -- speaking of which, ...
+
+
+### components of an `.rmd` source file 
+
+#### the header
+
+If you're looking at the source file `week4_document.rmd`, you'll see that the first six lines use a special syntax to specify basic attributes of the document: the title, the author, the date, and the output type. All of these are optional except for the output type. There are other, less relevant options that are *not* shown here, too. The entire block enclosed by `---`...`---` is called the **YAML header**, and tells the document-generating system how the file is meant to be compiled, who the author is, what the title is, what other files it should load (if any), etc.
+
+#### normal text (with markdown formatting if desired)
+
+After the header is the main body of the document, which mostly just contains text like this. We just type right into the file to add text to the output document. Here is where you use **markdown formatting** like asterisks for italics, like [brackets for links](LINK), and ###'s for sections and subsections. See the [R markdown cheetsheet](LINK) for pretty much all you'll need to know. 
+
+#### inline R code
+
+
+[DESCRIBE INLINE R CODE HERE]
+
+[ALSO HOW COMMENTS WORK IN RMD]
+
+[ALSO SIMPLIFY + ANNOTATE THE CSS AT THE BOTTOM]
+
+[ALSO EXPLAIN THE HR AND BR TAGS]
+
+
+#### R code chunks
+
+Interleaved throughout the main text of the document are **code chunks**. This first chunk is called the "setup" chunk, and it's the only "special" one. The setup chunk gives instructions for how all the other chunks should be displayed in the output. Don't worry about the setup chunk for now -- it will start to make sense as you use R Markdown more. 
+
+```{r setup}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE)
+```
+
+
+**exercise**: it's conventional to use `knitr::opts_chunk...` instead of just `opts_chunk...` in the setup chunk. Why? (*hint*: think about packages you might need...)
+
+
+You can insert a new code chunk with the shortcut **`ctrl+alt+i`**. The syntax for writing code chunks is: 
+
+```
+`r ''` ```{r chunk_name, chunkoption1=VALUE, chunkoption2=VALUE, ...}
+ 
+ # any R code you want to type 
+ line <- of("R", "code")
+ and  <- another(line)
+ finally(the_last, line)
+ 
+ # a comment about the plot 
+ plot(the_xvar, the_yvar)
+
+`r ''` ```
+```
+
+Here's an example with actual code (but note that it's **verbatim**, meaning that it's for display purposes only -- not a "real" chunk). 
+
+```
+`r ''` ```{r chunk_name, fig.width=7, fig.height=5}
+ carz <- head(mtcars, n=3)
+ carz$gear <- as.factor(carz$gear)
+ print(carz[, 6:10])
+`r ''` ```
+```
+
+Note that anything you can put as a chunk option in the setup chunk can also be used to specify an option for a particular chunk. But to specify a chunk option for an individual chunk, you put it after the chunk name, like in this example. So for example we could have put `fig.width=7` in the `opts_chunk$set()` command in the setup chunk. That would have the effect of making the default figure width 7 for all chunks in the document (unless that's overriden by an option in an individual chunk)
+
+Without the special verbatim formatting used above, the default way that code chunks appear in output is like this (referring to output document): first the code itself in a nice little block, and then the console output in a separate block.
+
+```{r chunk_name, fig.width=7, fig.height=5}
+carz <- mtcars
+carz$cyl <- as.factor(carz$cyl)
+carz$am <- as.factor(carz$am)
+print(carz[1:5, c("cyl","am","gear","mpg","hp","wt")])
+```
+
+Look through the [R Markdown cheatsheet](LINK) and the [R Markdown reference guide](LINK) for all kinds of useful chunk options. 
+
+#### plots and tables 
+
+You can write chunks that will display plots of any kind. The package `knitr::` also has nice functions like `kable()`, which take many kinds of rectangular console output (like a printed data frame or summary table), and turn them into nice, pretty formatted tables in the output file. 
+
+Here's an example of a chunk with a nice table as output (cf. the same material `print()`ed in above chunk):
+
+```{r}
+knitr::kable(carz[1:5, c("cyl","am","gear","mpg","hp","wt")])
+```
+
+
+Here's an example of a chunk with plot output:
+
+```{r}
+# a quick plot of two variables from `mtcars`
+ggplot2::qplot(carz$gear, carz$mpg)
+```
+
+You can even get fancy and wrap certain plot objects with `ggplotly()` to make them interactive(ish):[^3]
+
+[^3]: Note how the legends were handled differently. Both packages are under active development (or were recently), so chances are in a couple years this will be dealt with more uniformly. 
+
+```{r fig.width=10, fig.height=5}
+# make it interactive w plotly! :p
+library("ggplot2"); library("plotly")
+
+# here's a plot:
+boosh <- ggplot(carz, aes(x=wt, y=hp, shape=am, color=cyl)) +
+  geom_point(size=3)
+
+boosh
+
+# and here it is "interactivized"/"plotly-ized"
+ggplotly(boosh, width=900, height=400)
+```
+
+**hover over an individual data point to see its values. menu on upper-right hand corner for, e.g. "download plot as .png"**
+
+<br>
+
+Getting your figures to look right is a trial-and-error process. Try different values for the width, height, etc., to get the size/scale the way you want it.  Also check out [some examples on the `knitr::` github page](LINK), and you'll get an idea of how things work. The main chunk options that control figure size are: 
+
+- `fig.width`/`fig.height` -- width of the figure (units can be a tad confusing -- trial and error)
+- `out.width`/`out.height` -- interacts with `fig.width`/`fig.height`, has to do with scaling and space alotted to output display
+- `fig.show` -- controls whether figures should (`asis`) or shouldn't (`hide`) be shown; and if they are, should they all be shown together at the end of the chunk (`hold`), or shown immediately after the line that makes them (`asis`). There's also `animate` as an option. 
+
+Note that `fig.show` should be set to `"hold"` if you want to display e.g. two figures from the same chunk side-by-side in the output. 
+
+
+#### **optional** html/css
+
+You can use html wherever you want in R Markdown documents, as long as the output type is hmtl. That means you can also use css to specify how the document is styled. At the bottom of the source file `week4_document.rmd` you'll find some starter css that changes a couple of things and has some miscellaneous comments to get you started. 
+
+
+<hr><hr>
+<br><br>
+
+
+
+<link rel="stylesheet" type="text/css"
+href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700">
+
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500" rel="stylesheet">
+
+  <style>
+body {
+  padding: 10px;
+  font-size: 12pt;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1 { 
+  font-size: 20px;
+  color: DarkGreen;
+  font-weight: bold;
+}
+
+h2 { 
+    font-size: 16px;
+    color: green;
+}
+
+h3 { 
+  font-size: 24px;
+  color: green;
+  font-weight: bold;
+}
+
+h4 { 
+  font-size: 18px;
+  color: green;
+  font-weight: bolder;
+  padding-top: 30px;
+}
+
+.table {
+  width: 75%;
+}
+
+li {
+  padding: 3px;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+pre {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+p {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+</style>
+
+
+

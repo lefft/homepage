@@ -1,0 +1,34 @@
+---
+title: "an R Markdown template"
+author: "your name"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE) 
+```
+
+## first section 
+
+some stuff: 
+
+- bullet 1
+- ...
+
+### subsection
+
+a paragraph with some **boldface** and some inline R code `r mean(mtcars$mpg)`
+
+another paragraph with some *italics* and a [link](http://lefft.xyz)
+
+### another subsection
+
+this subsection has a code chunk, and `some code-y looking text`:
+
+```{r plotchunk, fig.width=8, fig.height=3}
+plot(x=1:10, y=rnorm(10, mean=5, sd=3))
+```
+
+## last section
+
+that's all folks! use `ctrl+shift+k` to create the output file `template.html`
