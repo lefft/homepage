@@ -1,5 +1,0 @@
----
-output: html_document
----
-
-yayy an R Markdown doc! :p

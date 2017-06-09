@@ -1,11 +1,15 @@
 ---
-title: "week4 document"
-author: "timothy leffel"
-date: "6/8/2017"
+title: "R mini-course: week 4"
+subtitle: "extra notes on R Markdown"
+author: "timothy leffel, june9/2017"
 output: html_document
 ---
 
-### a tale of two files: the source and the output
+If you go through this document with [the source](http://lefft.xyz/r_minicourse/notes/week4_extra_notes.rmd) and [the output](http://lefft.xyz/r_minicourse/notes/week4_extra_notes.html) side-by-side, you'll know enough to start making totally customizable R Markdown documents. 
+
+
+
+### 1. a tale of two files: the source and the output
 
 Whenever you're using R Markdown, there's two documents involved: 
 
@@ -15,7 +19,7 @@ Whenever you're using R Markdown, there's two documents involved:
 
 [^1]: or in rare cases something else like `.rnw`. 
 
-[^2]: Though note that if you want pdf output, you'll need to have $\LaTeX$ installed; [here](LINK)'s a link to get you started. If you don't want to mess with that or if you're in a hurry, just use html output and then "print" as a pdf from Google Chrome (which has very nice pdf printing options for webpages). R Markdown html output can actually be made to look quite good when printed as pdf. *That said*, $\LaTeX$ is awesome and well worth learning. 
+[^2]: Though note that if you want pdf output, you'll need to have $\LaTeX$ installed; [here](https://www.latex-project.org/get/)'s a link to get you started. If you don't want to mess with that or if you're in a hurry, just use html output and then "print" as a pdf from Google Chrome (which has very nice pdf printing options for webpages). R Markdown html output can actually be made to look quite good when printed as pdf. *That said*, $\LaTeX$ is awesome and well worth learning. 
 
 A concrete example: I'm currently typing into the document `week4_document.rmd` from the script editor in R Studio. If I use the keyboard shortcut `cmd+shift+k`, the document will get "knitted," and the output document will get created in the same directory as the source document is in. 
 
@@ -31,30 +35,22 @@ What happens when you knit a document is approximately the following:
 The output file in this case is `week4_document.html`, because that's what I specified in the header -- speaking of which, ...
 
 
-### components of an `.rmd` source file 
+### 2. components of an `.rmd` source file 
 
-#### the header
+#### 2.1 the header
 
 If you're looking at the source file `week4_document.rmd`, you'll see that the first six lines use a special syntax to specify basic attributes of the document: the title, the author, the date, and the output type. All of these are optional except for the output type. There are other, less relevant options that are *not* shown here, too. The entire block enclosed by `---`...`---` is called the **YAML header**, and tells the document-generating system how the file is meant to be compiled, who the author is, what the title is, what other files it should load (if any), etc.
 
-#### normal text (with markdown formatting if desired)
+#### 2.2 normal text (with markdown formatting if desired)
 
-After the header is the main body of the document, which mostly just contains text like this. We just type right into the file to add text to the output document. Here is where you use **markdown formatting** like asterisks for italics, like [brackets for links](LINK), and ###'s for sections and subsections. See the [R markdown cheetsheet](LINK) for pretty much all you'll need to know. 
+After the header is the main body of the document, which mostly just contains text like this. We just type right into the file to add text to the output document. Here is where you use **markdown formatting** like asterisks for italics, like [brackets for links](https://google.com), and ###'s for sections and subsections. See the [R markdown cheatsheet](http://lefft.xyz/r_minicourse/cheatsheets/cheatsheet_rmarkdown.pdf) for pretty much all you'll need to know. 
 
-#### inline R code
+#### 2.3 inline R code
 
-[MAKE POINT ABOUT SETTING OPTIONS...]
-
-[DESCRIBE INLINE R CODE HERE]
-
-[ALSO HOW COMMENTS WORK IN RMD]
-
-[ALSO SIMPLIFY + ANNOTATE THE CSS AT THE BOTTOM]
-
-[ALSO EXPLAIN THE HR AND BR TAGS]
+You can use backticks (the key above "tab") to make text `look like code`. However, if you use this backtick syntax but also include the letter "r" and then a space immediately after the "r", then knitr will treat what's between the backticks as actual R code. It will get executed and the resulting value will be displayed in the paragraph, `r "as if nothing was going on behind the scenes"` (see the source document for illustration). 
 
 
-#### R code chunks
+#### 2.4 R code chunks
 
 Interleaved throughout the main text of the document are **code chunks**. This first chunk is called the "setup" chunk, and it's the only "special" one. The setup chunk gives instructions for how all the other chunks should be displayed in the output. Don't worry about the setup chunk for now -- it will start to make sense as you use R Markdown more. 
 
@@ -62,6 +58,7 @@ Interleaved throughout the main text of the document are **code chunks**. This f
 knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE)
 ```
 
+It's a good idea to load packages you know you'll need in the setup chunk, too. 
 
 **exercise**: it's conventional to use `knitr::opts_chunk...` instead of just `opts_chunk...` in the setup chunk. Why? (*hint*: think about packages you might need...)
 
@@ -103,9 +100,9 @@ carz$am <- as.factor(carz$am)
 print(carz[1:5, c("cyl","am","gear","mpg","hp","wt")])
 ```
 
-Look through the [R Markdown cheatsheet](LINK) and the [R Markdown reference guide](LINK) for all kinds of useful chunk options. 
+Look through the [R Markdown cheatsheet]([R markdown cheatsheet](http://lefft.xyz/r_minicourse/cheatsheets/cheatsheet_rmarkdown.pdf)) for more kinds of useful chunk options. 
 
-#### plots and tables 
+#### 2.5 plots and tables 
 
 You can write chunks that will display plots of any kind. The package `knitr::` also has nice functions like `kable()`, which take many kinds of rectangular console output (like a printed data frame or summary table), and turn them into nice, pretty formatted tables in the output file. 
 
@@ -145,7 +142,9 @@ ggplotly(boosh, width=900, height=400)
 
 <br>
 
-Getting your figures to look right is a trial-and-error process. Try different values for the width, height, etc., to get the size/scale the way you want it.  Also check out [some examples on the `knitr::` github page](LINK), and you'll get an idea of how things work. The main chunk options that control figure size are: 
+Getting your figures to look right is a trial-and-error process. Try different values for the width, height, etc., to get the size/scale the way you want it.  Also check out [some examples on the `knitr::` page](https://yihui.name/knitr/demo/minimal/), and you'll get an idea of how things work. 
+
+The main chunk options that control figure size are: 
 
 - `fig.width`/`fig.height` -- width of the figure (units can be a tad confusing -- trial and error)
 - `out.width`/`out.height` -- interacts with `fig.width`/`fig.height`, has to do with scaling and space alotted to output display
@@ -154,77 +153,52 @@ Getting your figures to look right is a trial-and-error process. Try different v
 Note that `fig.show` should be set to `"hold"` if you want to display e.g. two figures from the same chunk side-by-side in the output. 
 
 
-#### **optional** html/css
+#### 2.6 **optional** html/css
 
-You can use html wherever you want in R Markdown documents, as long as the output type is hmtl. That means you can also use css to specify how the document is styled. At the bottom of the source file `week4_document.rmd` you'll find some starter css that changes a couple of things and has some miscellaneous comments to get you started. 
+You can use html wherever you want in R Markdown documents, as long as the output type is hmtl. That means you can also use css to specify how the document is styled. At the bottom of the source file `week4_document.rmd` you'll find some starter html/css that changes a couple of things and has some miscellaneous comments to get you started. 
 
+You can also type html directly in the source (when output is html), e.g. `<hr>` for a horizontal line or `<br>` for a line-break.
 
 <hr><hr>
 <br><br>
 
-
-
-<link rel="stylesheet" type="text/css"
-href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700">
-
+<!-- this imports a google web-font that i use for code-y text -->
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500" rel="stylesheet">
 
-  <style>
-body {
-  padding: 10px;
-  font-size: 12pt;
-  font-family: 'Open Sans', sans-serif;
-}
+<!-- what follows are "css rules" -->
 
-h1 { 
-  font-size: 20px;
-  color: DarkGreen;
-  font-weight: bold;
-}
-
-h2 { 
-    font-size: 16px;
-    color: green;
-}
+<style>
 
 h3 { 
-  font-size: 24px;
-  color: green;
-  font-weight: bold;
-}
-
-h4 { 
+  // change level-3 header style
   font-size: 18px;
   color: green;
   font-weight: bolder;
-  padding-top: 30px;
+  padding-top: 20px;
+}
+
+h4 { 
+  // change level-4 header style
+  font-size: 16px;
+  color: green;
+  font-weight: bold;
+  font-style: italic;
+  padding-top: 10px;
 }
 
 .table {
+  // table width
   width: 75%;
 }
 
-li {
-  padding: 3px;
-}
-
 code {
+  // next two control font and size for code-y text
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
 }
-
-blockquote {
-  font-style: italic;
-}
-
 pre {
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
-}
-
-p {
-  margin-top: 30px;
-  margin-bottom: 15px;
 }
 
 </style>

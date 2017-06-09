@@ -127,47 +127,36 @@ $(document).ready(function () {
 <ol style="list-style-type: decimal">
 <li><a href="#sec1">markdown and R Markdown basics</a>
 <ul>
-<li>1.1 <a href="#sec11">wha is “markdown” and wha is “R markdown”?!</a></li>
+<li>1.1 <a href="#sec11">what is “markdown” and what is “R markdown”?!</a></li>
 <li>1.2 <a href="#sec12">structure of an R markdown document</a></li>
 <li>1.3 <a href="#sec13">output formats</a></li>
 <li>1.4 <a href="#sec14">“quick report” from an R script</a></li>
 </ul></li>
 <li><a href="#sec2">producing some R Markdown documents</a>
 <ul>
-<li>2.1 <a href="#sec21">planning the flow of an “analysis document”</a></li>
-<li>2.2 <a href="#sec22">working through a quick example document together</a></li>
+<li>2.1 <a href="#sec21">quick example documents</a></li>
+<li>2.2 <a href="#sec22">working through an example together</a></li>
 <li>2.3 <a href="#sec23">everyone builds their own nice pretty document!</a></li>
 </ul></li>
 <li><a href="#sec3">concluding…</a>
 <ul>
-<li>…and drinking?! I’m thinking of going to <a href="https://goo.gl/maps/oD9JLEWPvv62">Jimmy’s (aka Woodlawn Tap)</a> – any takers??</li>
+<li>…and happy-houring?! I’m thinking of going to <a href="https://goo.gl/maps/oD9JLEWPvv62">Jimmy’s/Woodlawn Tap</a> – any takers??</li>
 </ul></li>
 </ol>
 <p><br><br></p>
-<p>ideas for things to hit in this class:</p>
-<ul>
-<li>remember to load your packages!</li>
-<li>read in your dataset and print a summary or the <code>head()</code>/<code>tail()</code></li>
-<li>tables for a few variables, with or without <code>kable()</code></li>
-<li>scatterplots or barplots or histograms with <code>plot(x, y)</code>, <code>barplot(table(df$x)))</code>, and <code>hist(df$x)</code></li>
-<li>fancy visualizations with <code>ggplot()</code></li>
-<li>ggplotly exx</li>
-<li>you can’t use current vars in an rmd – must be “modular”</li>
-</ul>
-<p><br><br></p>
-<div id="markdown-and-r-markdown-basics" class="section level3">
+<div id="sec1" class="section level3">
 <h3>1. markdown and R Markdown basics</h3>
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
-<div id="wha-is-markdown-and-wha-is-r-markdown" class="section level4">
-<h4>1.1 wha is markdown and wha is <em>R</em> markdown?!</h4>
+<div id="sec11" class="section level4">
+<h4>1.1 what is markdown and what is <em>R</em> markdown?!</h4>
 <p><strong>Markdown</strong> is a format for writing in plain text. There are many “flavors” of markdown, but they’re all fairly similar. For example there’s wordpress-flavored markdown, wikipedia-flavored markdown, and stack overflow-flavored markdown. There’s also something like “R-flavored markdown”, which is typed directly into a plain-text document with extension <code>.Rmd</code> (like this one).</p>
 <p>Markdown documents usually end up getting <strong>compiled</strong> by some system or another. Basically what the compiler does is it takes your plain text document and builds a fancy version of it: the “compiled”/“output” version has the same content but is now a different kind of document – like .docx or .pdf or .html – and has whatever kind of style/formatting you’d expect for that kind of document.</p>
 <p>When you’re actually writing, special formatting makes the structure of the document visible (e.g. with ###’s for section headings). And when you actually compile the document, those same structural components will still be there – they’ll just be prettified and adapted to whatever the output format it (e.g. html, pdf, or docx).</p>
-<p>The point of markdown is that it’s simultaneously easy for humans to use and easy for computers to understand. Writing in markdown is much, much simpler than writing in e.g. Microsoft Word. There’s no dropdowns and no options relating to indentation, page-margins, etc.: you’re just typing whatever you want to type into a text editor. All the formatting is done <em>externally</em>, e.g. by some css rules that you have somewhere else, or by the engine that’s making your output document (which will be <a href="LINK">knitr</a> in our case).</p>
+<p>The point of markdown is that it’s simultaneously easy for humans to use and easy for computers to understand. Writing in markdown is much, much simpler than writing in e.g. Microsoft Word. There’s no dropdowns and no options relating to indentation, page-margins, etc.: you’re just typing whatever you want to type into a text editor. All the formatting is done <em>externally</em>, e.g. by some css rules that you have somewhere else, or by the engine that’s making your output document (which will be <a href="https://yihui.name/knitr/">knitr</a> in our case).</p>
 <p><strong>note</strong>: key to markdown is the idea that content is specified separate from style. This principle also drives the internet, and (I’d say) is directly reflected in the recent move away from older html protocols and towards the complete integration of HTML5 and CSS.</p>
 </div>
-<div id="structure-of-an-r-markdown-document" class="section level4">
-<h4>1.2 structure of an R markdown document</h4>
+<div id="sec12" class="section level4">
+<h4>1.2 structure of an R markdown source document (<code>.rmd</code> file)</h4>
 <ul>
 <li>header (“YAML header”)</li>
 <li>text
@@ -185,30 +174,31 @@ $(document).ready(function () {
 <li>to evaluate and format as text:</li>
 <li>to display as code:</li>
 </ul></li>
-<li>css (<em>optional</em>) <!-- , as html or external style file --></li>
+<li>html/css (<em>optional</em>)</li>
 </ul>
 </div>
-<div id="output-formats-for-.rmd-documents" class="section level4">
-<h4>1.3 output formats for <code>.rmd</code> documents</h4>
+<div id="sec13" class="section level4">
+<h4>1.3 output formats you can create from <code>.rmd</code> files</h4>
 <ul>
 <li>html document</li>
 <li>pdf document (via <span class="math inline">\(\LaTeX\)</span>)</li>
 <li>MS Word document</li>
-<li>slides (various output options)</li>
+<li>slides (various output options, but beyond scope of course)</li>
 <li>“flexdashboards” (beyond scope of course)</li>
 <li>Shiny apps (beyond scope of course)</li>
 </ul>
 </div>
-<div id="making-a-quick-report-from-an-r-script" class="section level4">
+<div id="sec14" class="section level4">
 <h4>1.4 making a “quick report” from an R script</h4>
+<p>You can use the shortcut <strong><code>ctrl+shift+k</code></strong> to build an output document, even on a normal R script. This will cause knitr to build a “quick report” – basically, a visually nice version of your R script.</p>
 <p><br></p>
 </div>
 </div>
-<div id="producing-some-r-markdown-documents" class="section level3">
+<div id="sec2" class="section level3">
 <h3>2. producing some R Markdown documents</h3>
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
-<div id="example-documents" class="section level4">
-<h4>2.1 example documents</h4>
+<div id="sec21" class="section level4">
+<h4>2.1 quick example documents</h4>
 <div id="the-simplest-one" class="section level5">
 <h5>the simplest one</h5>
 <p>Here’s the simplest R Markdown file that one could make, alongside its output:</p>
@@ -228,37 +218,38 @@ $(document).ready(function () {
 <p>The file itself is only 35 lines, but it illustrates a lot of useful things. See also the default R Studio <code>.Rmd</code> template, which you can view by going to “File” –&gt; “New File” –&gt; “R Markdown…” and then selecting your output format of choice.</p>
 </div>
 </div>
-<div id="planning-the-flow-of-an-analysis-document" class="section level4">
-<h4>2.2 planning the flow of an “analysis document”</h4>
+<div id="sec22" class="section level4">
+<h4>2.2 working through an example together</h4>
+<p><strong>exercise</strong>: go through the file <code>template.rmd</code> line-by-line, and compare it to the output file <code>template.html</code> to get an idea of how different kinds of things get rendered.</p>
+<p><strong>exercise</strong>: do the same for <code>week4_skeleton.rmd</code>, comparing it to <code>week4_skeleton.html</code></p>
 </div>
-<div id="working-through-a-quick-example-document-together" class="section level4">
-<h4>2.3 working through a quick example document together</h4>
-</div>
-<div id="everyone-builds-a-nice-pretty-document" class="section level4">
-<h4>2.4 everyone builds a nice pretty document!</h4>
+<div id="sec23" class="section level4">
+<h4>2.3 everyone builds a nice pretty document!</h4>
 <p>Now here’s the task, which simultaneously functions as an in-class activity, as the exercises for the fourth and final week, and as a “final project”:</p>
-<p><strong>exercise</strong>: create an R Markdown document that…</p>
+<p><strong>exercise</strong>: using <code>week4_skeleton.rmd</code> as a starting point, create an R Markdown document that…</p>
 <ol style="list-style-type: decimal">
 <li>reads in the dataset you obtained last week;</li>
 <li>prints the first few rows of the dataset (try wrapping with <code>knitr::kable()</code> for nicer output);</li>
-<li>prints some summary statistics for a few columns of interest (however feels most do-able and comfortable – maybe some <code>table()</code>s or an <code>aggregate()</code>; or, use <code>group_by()</code> and <code>summarize()</code> from <code>dplyr::</code> if you want to get fancy);</li>
+<li>prints some summary statistics and/or tables of a few columns of interest (whatever feels most do-able and comfortable – maybe some <code>table()</code>s or an <code>aggregate()</code>; or, use <code>group_by()</code> and <code>summarize()</code> from <code>dplyr::</code> if you want to get fancy);</li>
 <li>displays a plot using one of the base functions <code>plot()</code>, <code>barplot()</code>, or <code>hist()</code>; and</li>
-<li>displays a plot using the <code>qplot()</code> function from <code>ggplot2::</code> (a nice quick way to visualize info – forgot to touch on that last week!)</li>
-<li>displays a plot using <code>ggplot()</code>.</li>
+<li>displays a plot using <code>ggplot()</code>, or using the <code>qplot()</code> function from <code>ggplot2::</code> (a nice quick way to visualize info – forgot to touch on that last week!)</li>
 </ol>
-<p>If you can make a document with all of these components, you have learned quite a lot. If you can make such a document <em>and understand how everything works</em>, then…you’ve learned quite a lot plus some more(?)</p>
+<p>If you can make a document with all of these components, then you have learned quite a lot. If you can make such a document <em>and understand how everything works</em>, then…you’ve learned quite a lot plus even more.</p>
+<p><br></p>
 </div>
 </div>
-<div id="concluding-remarks" class="section level3">
+<div id="sec3" class="section level3">
 <h3>3. concluding remarks</h3>
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
 <p>Anyway, final thought:</p>
 <blockquote>
-<p><strong>PRACTICE MAKES PERFECT</strong><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p><strong>PRACTICE MAKES PERFECT</strong><span class="math inline">\(^***\)</span></p>
 </blockquote>
-<p>If you put the hours in, you will be rewarded more than you think. With all the resources the internet has to offer, it is totally possible to become a proficient R user with a year or less of consistent practice.</p>
-<p><em>Most importantly of all</em>, try to stay calm when you get stuck. And you will get stuck. Many times. Getting stuck is perfectly fine and perfectly normal. No one learning to code <em>doesn’t</em> get stuck many times. Use google, and use it often. Use stack overflow, and use it often. If you get sidetracked when googling one thing and find yourself reading about some other R-related thing, <em>good</em>. The more you expose yourself to anything R-related, the faster you’ll learn.</p>
-<p>On the course page there’s a list of <a href="LINK">interesting links</a> that I’ve been gathering the last few weeks. Some of them are as entertaining as they are instructive, so check them out if you want to.</p>
+<p><span class="math inline">\(^***\)</span> I mean of course nothing is ever <em>perfect</em>. But I do think that practice is both a necessary and a sufficient condition for becoming proficient.</p>
+<p><br></p>
+<p>If you put the hours in, you will be rewarded more than you might expect. With all the resources the internet has to offer, it is totally possible to become a proficient R user with a year or less of consistent practice.</p>
+<p><em>Most importantly of all</em>, try to stay calm when you get stuck. And you will get stuck. Many times. Getting stuck is perfectly fine and perfectly normal. No one learning to code <em>doesn’t</em> get stuck many, many times. Use google, and use it often. Use stack overflow, and use it often. If you get sidetracked when googling one thing and find yourself reading about some other R-related thing, <em>that is actually a good thing</em>. The more you expose yourself to <em>anything</em> R-related, the faster you’ll learn.</p>
+<p>On the course page there’s a list of <a href="http://lefft.xyz/r_minicourse/index.html#linxe">interesting links</a> that I’ve been gathering the last few weeks. Some of them are as entertaining as they are instructive, so check them out if you want to.</p>
 <p>Okay that’s it. Happy hacking yalls!</p>
 <hr>
 <hr>
@@ -325,12 +316,6 @@ p {
 
 </style>
 <!-- END OF DOCUMENT IS HERE -->
-</div>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>I mean of course nothing is ever <em>perfect</em>. But I do think that practice is both a necessary and a sufficient condition for becoming proficient.<a href="#fnref1">↩</a></p></li>
-</ol>
 </div>
 
 
