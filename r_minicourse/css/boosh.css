@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,400i,600,700');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700');
 
 .body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .boosh {
@@ -28,8 +28,8 @@
 
 body {
   padding: 10px;
-  font-size: 12pt;
-  font-family: Raleway, sans serif;
+  font-size: 13pt;
+  font-family: 'Source Sans Pro', sans-serif;
   /*line-height: 1.4em;*/
 }
 
@@ -41,15 +41,15 @@ code {
 h6 {
   font-size: 16pt;
   color: #3a563a;
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   /*line-height: 1.4em;*/
 }
 
 h5 {
   font-size: 16pt;
-  color: #596d59;
-  font-family: 'Raleway', sans-serif;
+  color: #788778;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   margin-top: 20px;
 }
