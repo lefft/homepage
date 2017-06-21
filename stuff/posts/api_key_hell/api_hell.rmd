@@ -1,0 +1,121 @@
+---
+title: "a low-tech strategy for managing API keys"
+subtitle: "or: how to avoid git hell"
+author: "timothy leffel  &nbsp;&nbsp; jun16/2017"
+output: html_document
+---
+
+
+**work in progress, jun16/2017**
+
+<hr style="height:2px; background-color: gray; color:gray;">
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, eval=FALSE)
+library("dplyr"); library("magrittr")
+```
+
+## 1. Motivation
+
+Suppose you're the kind of person who occassionally uses API's to obtain data. Maybe the twitter search API, or monkeylearn's nice interface to user-contributed models. In each case, you'll need a separate API key in order for your query to not be rejected. Suppose further that this isn't a part of your daily work, and you'd rather not mess with config files or environment variables (if you use R). 
+
+One thing you might do is just assign your private API key to a global variable, and then feed that into each API call (or maybe hard-coding it as an argument via a simple wrapper function). If you just assign the API key variable interactively (i.e. not in a script), then whenever you restart the session you'll have to track down the key again and re-assign it to your variable. 
+
+It's dangerous to actually include the key in a script, because you'll probably forget you did that at some point and then unwittingly push a commit to github that contains your private keys. Then your private key will be publicly available to the world via the commit log on github. Then you'll probably panic and spend three hours trying to figure out how to remove individual commits from your repo's history (the solution involves [BFG](LINK), but unless you're a git superhero it will be a confusing pain in the ass). 
+
+## 2. Solution
+
+Say you have a git repo with a bunch of little folders in it. Within each folder, say you're playing around with a different API. This can get out of hand very quickly if you're not using a root-level config file (which yeah, yeah, you probably should be but whatever you're not). 
+
+Say your repo looks like this: 
+
+IMAGE OF DIR STRUCTURE
+
+And say you're currently working in `FOLDER NAME` with API $x$, but tomorrow you might be working in `ANOTHER FOLDER` with API $y$. You want to keep all of your keys in a single location, but you also want to make sure that there is *no chance* that you'll accidentally end up pushing code or notes that contain one of the keys. 
+
+```{r}
+keyz <- "../../../keyz.csv" %>% 
+  read.csv()
+```
+
+
+## 3. Conclusions
+
+You could just `.gitignore` a file in the repo that contains all your keys, sure. ...
+
+
+
+<br><br>
+<hr><hr>
+<br><br>
+
+
+
+
+<link rel="stylesheet" type="text/css"
+href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,700">
+
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500" rel="stylesheet">
+
+  <style>
+body {
+  padding: 10px;
+  font-size: 12pt;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1 { 
+  font-size: 20px;
+  color: DarkGreen;
+  font-weight: bold;
+}
+
+h2 { 
+    font-size: 16px;
+    color: green;
+}
+
+h3 { 
+  font-size: 24px;
+  color: green;
+  font-weight: bold;
+}
+
+h4 { 
+  font-size: 18px;
+  color: green;
+  font-weight: bolder;
+  padding-top: 10px;
+}
+
+li {
+  padding: 3px;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+pre {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+p {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+</style>
+
+
+
+<!-- END OF DOCUMENT IS HERE -->
+

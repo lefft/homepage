@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,400i,700');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,400i,700');
+/*or: Raleway */
 
-.body {
-  font-family: 'Raleway', sans-serif;
-}
 
 .boosh {
     margin: 4px;
@@ -22,9 +20,14 @@
 
 body {
   padding: 10px;
-  font-size: 12pt;
-  font-family: Raleway, sans serif;
+  font-size: 13pt;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
   /*line-height: 1.4em;*/
+}
+
+li {
+  padding-top: 6px;
 }
 
 main {
