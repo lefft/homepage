@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+/*@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');*/
 /*or: Raleway */
 
 
@@ -76,6 +76,20 @@ h4 {
   /* border: solid grey; */
   }
 
+/*main text body */
+/*main {*/
+  /*width: auto !important;*/
+  /*min-width: 10px !important;*/
+/*}*/
+
+
+
+.navbar {
+  width: 175px;
+  margin-right: auto;
+  /*shape-margin: 0px;*/
+  /*padding-right: 100px;*/
+}
 
 /* nav items */
 .nav-header:after {

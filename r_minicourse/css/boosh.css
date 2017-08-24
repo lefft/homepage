@@ -12,6 +12,13 @@
     /*border: 1px solid grey;*/
 }
 
+.navbar {
+  width: 175px;
+  margin-right: auto;
+  /*shape-margin: 0px;*/
+  /*padding-right: 100px;*/
+}
+
 
 #blaowwie {
   padding-left: 0px;
