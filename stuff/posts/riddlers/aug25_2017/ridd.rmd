@@ -5,12 +5,20 @@ date: ""
 output: html_document
 ---
 
-### solution to 538 Riddler Express (aug25/2017)
+### Solution to 538's aug25/2017 Riddler Express 
 
 ##### [timothy leffel](http://lefft.xyz) (@lefft)
 
 <hr>
 
+here is the problem (original post from 538 [here](https://fivethirtyeight.com/features/work-a-shift-in-the-riddler-gift-shop/)): 
+
+
+> *You take half of a vitamin every morning. The vitamins are sold in a bottle of 100 (whole) tablets, so at first you have to cut the tablets in half. Every day you randomly pull one thing from the bottle — if it’s a whole tablet, you cut it in half and put the leftover half back in the bottle. If it’s a half-tablet, you take the vitamin. You just bought a fresh bottle. How many days, on average, will it be before you pull a half-tablet out of the bottle?*
+
+> Extra credit: *What if the halves are less likely to come up than the full tablets? They are smaller, after all.*
+
+<hr><br><br>
 
 ```{r echo=FALSE}
 library("ggplot2")
@@ -18,6 +26,7 @@ theme_set(theme_minimal(14))
 ```
 
 *note*: extra credit is the case where `weighted=TRUE`
+
 
 #### 1. draw a pill from our bottle, with or without weights.
 
@@ -31,8 +40,8 @@ draw_pill <- function(bottle, weighted){
     weight_half <- sum(bottle=="half_pill") 
     weights <- c(weight_full, weight_half) / (weight_full + weight_half)
   } else {
-    weight_full <- (sum(bottle=="full_pill") * 2) #/ length(bottle)
-    weight_half <- sum(bottle=="half_pill") #/ length(bottle)
+    weight_full <- sum(bottle=="full_pill") * 2 
+    weight_half <- sum(bottle=="half_pill") 
     weights <- c(weight_full, weight_half) / (weight_full + weight_half)
   }
   return(sample(c("full_pill", "half_pill"), size=1, prob=weights))
@@ -137,4 +146,43 @@ aaaand a boxplot too, for the types who appreciate straining their eyes/minds.
 ```{r}
 ggplot(sim_data, aes(x=sim_type, y=num_days)) + geom_boxplot()
 ```
+
+
+
+
+
+
+<link rel="stylesheet" type="text/css"
+href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
+
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500" rel="stylesheet">
+
+<style>
+body {
+  padding: 10px;
+  font-size: 12pt;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+h4 {
+  margin-top: 32px;
+  font-weight: bold;
+}
+
+blockquote {
+  font-size: 12pt;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+code {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+}
+
+pre {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+}
+
+</style>
 
