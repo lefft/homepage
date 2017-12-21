@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="timothy leffel    june3/2017" />
+<meta name="author" content="timothy leffel    june03/2017" />
 
 
 <title>notes on the feasibility of a twitter-driven BTC trading bot</title>
@@ -117,26 +117,30 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">notes on the feasibility of a ‘twitter-driven’ BTC trading bot</h1>
-<h4 class="author"><em>timothy leffel    june3/2017</em></h4>
+<h4 class="author"><em>timothy leffel    june03/2017</em></h4>
 
 </div>
 
+<!-- <i> -->
+	<b style='font-weight: 700px !important;'>dec/2017 update:</b> <i>@bitcoinprice stopped tweeting on June 4, 2017 --- the day after I posted this. Interesting...<br>Coincidence?! Probably. </i>
+<!-- </i> -->
 
-<p><strong>work in progress, may31/2017</strong></p>
+<!-- <p><strong>work in progress, may31/2017</strong></p> -->
+
 <hr style="height:2px; background-color: gray; color:gray;">
 <ul>
-<li>part1: quick description of idea, plot + validate twitter btc price strategy (<em>just twitter + external btc data</em>)</li>
-<li>part2: use monkeylearn classifiers to measure sentiment abt stuff, moving to btc topic (<em>introduce monkeylearn api</em>)</li>
-<li>part3: identify key dates, assess rel’ship btwn btc sentiment and price (<em>limitations of twitter api become obvious here</em>)</li>
+<li><a href="#btc-prices-from-twitter">part1</a>: quick description of idea, plot + validate twitter btc price strategy (<em>just twitter + external btc data</em>)</li>
+<li><a href="#tweet-sentiment-about-btc">part2</a>: use monkeylearn classifiers to measure sentiment abt stuff, moving to btc topic (<em>introduce monkeylearn api</em>)</li>
+<li><a href="#btc-related-tweet-sentiment-on-turbulent-btc-days">part3</a>: identify key dates, assess rel’ship btwn btc sentiment and price (<em>limitations of twitter api become obvious here</em>)</li>
 </ul>
 <hr style="height:2px; background-color: gray; color:gray;">
-<p>The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we’ll only use data publicly available via the twitter API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only the standard twitter API tools (to my knowledge, at least). A scaled-up (and idealized) version of this strategy would use firehose output for bitcoin-related keywords at particular time intervals during which bitcoin trading prices are volatile.</p>
-<p>linxe to put in final post:</p>
+<p>The use of twitter data for estimating public sentiment about issues can still be considered a fledgling-ish field. Here we assess the degree to which a fairly naive sentiment classifier can be used to predict the trajectory of the average bitcoin trading price, over time. The catch is that we’ll only use data publicly available via the twitter API. This is limiting in a few respects, chief among which is that targeting specific historical date ranges is basically impossible with only twitter's public search API tools. A scaled-up (and idealized) version of this strategy would use firehose output for bitcoin-related keywords at particular time intervals during which bitcoin trading prices are volatile.</p>
+<p>A few links to stuff used or mentioned in this post:</p>
 <ul>
-<li><a href="https://thestack.com/world/2015/05/08/three-steps-to-building-a-twitter-driven-trading-bot/">the concept of a “twitter-driven” trading bot</a></li>
+<li><a href="https://thestack.com/world/2015/05/08/three-steps-to-building-a-twitter-driven-trading-bot/">the concept of a “twitter-driven” trading bot</a> (found after writing this)</li>
 <li><a href="LINK">documentation for <code>monkeylearn::</code> R package</a></li>
 <li><a href="https://brightplanet.com/2013/06/twitter-firehose-vs-twitter-api-whats-the-difference-and-why-should-you-care/">twitter firehose vs api (and api’s in general)</a></li>
-<li>…</li>
+
 </ul>
 <p><br></p>
 <div id="btc-prices-from-twitter" class="section level3">
@@ -176,24 +180,24 @@ day_labels &lt;- c(&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quo
 # then clean up the data, toss all the info we don't want/need, + call it `dat`
 dat &lt;- userTimeline(user=&quot;bitcoinprice&quot;, n=3200, excludeReplies=TRUE)  %&gt;% 
   # convert json-ish tweets to a df
-  twListToDF()                                                         %&gt;% 
+  twListToDF() %&gt;% 
   # not interested in retweeted content
-  filter(!isRetweet)                                                   %&gt;% 
+  filter(!isRetweet) %&gt;% 
   # make time-series easier to deal with
-  mutate(date      = date(created),
-         hour      = hour(created),
-         date_time = as.POSIXct(created, tz=&quot;UTC&quot;))                    %&gt;%
+  mutate(date = date(created),
+         hour = hour(created),
+         date_time = as.POSIXct(created, tz=&quot;UTC&quot;)) %&gt;%
   # get day of the week, give them quick labels as defined above
-  mutate(day       = weekdays(date_time, abbreviate=TRUE))             %&gt;% 
-  mutate(day       = factor(day, levels=day_labels))                   %&gt;%
+  mutate(day = weekdays(date_time, abbreviate=TRUE)) %&gt;% 
+  mutate(day = factor(day, levels=day_labels)) %&gt;%
   # put colnames in my preferred format
-  rename(data_src  = screenName,   
-         num_fav   = favoriteCount, 
-         num_RT    = retweetCount, 
-         is_RT     = isRetweet)                                        %&gt;% 
+  rename(data_src = screenName,   
+         num_fav = favoriteCount, 
+         num_RT = retweetCount, 
+         is_RT = isRetweet) %&gt;% 
   # toss everything that's not relevant, arrange as desired
-  select(data_src,  date_time,  date,   hour,  day, 
-         num_fav,   num_RT,     is_RT,  text)</code></pre>
+  select(data_src, date_time, date, hour, day, 
+         num_fav, num_RT, is_RT, text)</code></pre>
 <p>The tweets – now in <code>dat$text</code> are completely formulaic, and have the following shape:</p>
 <blockquote>
 <p><span class="citation">@bitcoinprice</span>: The average price of Bitcoin across all exchanges is &lt;dddd.dd&gt; USD</p>
@@ -438,7 +442,7 @@ ggplot(merged_zoom, aes(x=date, y=price, group=data_src, color=data_src)) +
 <hr style="height:1px; background-color:lightgray; color:lightgray;">
 <div id="enter-classifier" class="section level4">
 <h4>enter classifier</h4>
-<p>Monkeylearn is a nice web-based NLP service that allows you to programmatically send unstructured text to classifiers, taggers, and extractors that are hosted on the platform. The R bindings to the monkeylearn API (via <a href="https://github.com/ropensci/monkeylearn">the <code>monkeylearn::</code> package</a>) take in some text and a specification of which classifier/extractor you want to use, and spit back classifications, sentiment scores, or whatever you requested from the classifier/extractor you specified.</p>
+<p>Monkeylearn is a nice web-based NLP service that allows you to programmatically send unstructured text to classifiers, taggers, and extractors that are hosted on the platform. The R bindings to the monkeylearn API (via <a href="https://github.com/ropensci/monkeylearn">the <code>monkeylearn::</code> package</a>) take in some text and a specification of which classifier/extractor you want to use, and spit back classifications, sentiment scores, or whatever you requested from the model you specified.</p>
 <pre class="r"><code># load monkeylearn api bindings
 library(&quot;monkeylearn&quot;)
 
