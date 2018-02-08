@@ -1016,7 +1016,7 @@ body .markdown-body
 }
 </style><title>xxxx</title></head><body><article class="markdown-body"><p><del>~</del> A quick #Rfun post <del>~</del> </p>
 <p><em>Common scenario</em>: you want to get a set of specific summary statistics on several columns of a data frame. </p>
-<p><em>Example</em>: I want to get the mean, median, sd, and n of a handful of columns from the <code>mtcars</code> dataset. </p>
+<p><em>Example</em>: I want to get the mean, sd, and number of unique values of all numeric columns of the (built-in) <code>mtcars</code> dataset. </p>
 <p><em>Compact Solution</em>: collect some functions in a (named) list, collect some column names in a vector, then use nested <code>sapply()</code> calls to compute all the combos.</p>
 <pre><code class="r">funcs &lt;- list(mean=mean, sd=sd, n_unique=function(x) length(unique(x)))
 cols &lt;- names(mtcars[, sapply(mtcars, is.numeric)])
