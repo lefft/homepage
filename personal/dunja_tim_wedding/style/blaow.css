@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css?family=Montez:400,400i,700|Inconsolata:400,400i,700|Amatic SC:400,400i,700');
+
+
+/*PROB WANT TO DELETE THE SECTION TAGS BC LOOKS CROWDED/BLOATED RN*/
+
+section {
+  border-width: 2px;
+  border-color: rgb(73,78,82);
+  margin: 10px;
+  padding: 10px;
+  background-color: rgba(175,181,181,.85);
+  border-radius: 4px; /* originally just 4px; */
+  width: 650px; /* prob shd use 800 */
+  text-align: left;
+
+}
+
+.fa-angle-down {
+  vertical-align: text-bottom;
+}
+
+
+body {
+  font-family: Inconsolata, sans-serif;
+  font-size: 14px;
+  vertical-align: text-bottom;
+  max-width: 800px;
+  margin: auto;
+  background-image: url('../img/forforrre6.png');
+  /*background-size: auto|length|cover|contain|initial|inherit;*/
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /*background-attachment: scroll|fixed|local|initial|inherit;*/
+  background-attachment: fixed;
+  /*THERE IS NO BACKGROUND OPACITY SO GOTSTA HAQQITTE*/
+  /* SEE THIS FOR HOW TO HAQQITTE: https://css-tricks.com/snippets/css/transparent-background-images/ */
+  /*background-opacity: .1;*/
+}
+
+.meform {
+  border: 10px solid;
+  border-color: rgba(196, 139, 59, 0.4);
+  border-radius: 4px;
+  vertical-align: middle;
+  background-color: rgba(100, 128, 39, 0.2);
+  height: auto;
+  width: 600px;
+  display: inline-block;
+}
+
+label[class=raydio]{
+  border: 2px solid rgba(255,255,167,.4);
+  padding: 4px;
+  width: 350px;
+  text-align: left;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+
+td {
+  padding: 10px;
+  width: 300px;
+}
+
+tr {
+  border: 2px solid rgba(255,255,167,.4);
+  border-radius: 2px;
+  /*display: block;*/
+  margin: 2px;
+}
+
+
+#taybehead,#taybefoot {
+  /*display: block;*/
+  text-align: center;
+}
+
+
+div.meform {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  align-content: center;
+}
+
+
+/*THIS IS FOR THE COLLAPSING STUFFE*/
+.collapsible {
+  border-width: 2px;
+  border-color: rgb(73,78,82);
+  background-color: rgba(175,181,181,.85);
+  border-radius: 4px; /* originally just 4px; */
+  width: 555px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.content {
+  padding-top: 16px;
+  padding-bottom: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  /* cd be better w just top/bottom margins */
+  margin: 0px; 
+  /*background-color: rgba(175,181,181,.85);*/
+  /*background-color: rgba(10,10,10,.25);*/
+  border-width: 2px;
+  border-color: rgb(73,78,82);
+  border-radius: 4px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+
+input {
+  min-width: 160px;
+}
+
