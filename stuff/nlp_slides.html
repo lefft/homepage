@@ -112,7 +112,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">timothy leffel // <a href="http://lefft.xyz" class="uri">http://lefft.xyz</a> // march28/2018</p>
+            <p style="margin-top: 6px; margin-left: -2px;">timothy leffel // <a href="http://lefft.xyz" class="uri">http://lefft.xyz</a> // april05/2018</p>
           </hgroup>
   </slide>
 
@@ -201,18 +201,22 @@
 
 </article></slide><slide class=""><hgroup><h2>what is natural language processing?</h2></hgroup><article  id="what-is-natural-language-processing-2">
 
-<p>easier to define NLP in terms of <em>tasks</em> and <em>objectives</em> than an abstract characterization</p>
+<p>easier to characterize NLP in terms of <em>tasks</em> and <em>objectives</em> than an abstract def'n</p>
 
 <p>some common tasks:</p>
 
 <ul>
-<li>document classification (&quot;is this about a person or a place?&quot;)</li>
-<li>sentiment analysis (&quot;is this text positive or negative?&quot;)</li>
-<li>topic modeling (&quot;what are the topics in this set of documents?&quot;)</li>
-<li>named entity recognition (&quot;who/what/where is this text talking about?&quot;)</li>
+<li>document classification* (&quot;is this text about Chicago or Trump or vaping?&quot;)</li>
+<li>sentiment analysis (&quot;is author endorsing or criticizing something?&quot;)</li>
+<li>topic modeling (&quot;what 'topics' are discussed in this set of documents?&quot;)</li>
+<li>named entity recognition (&quot;who/what/where does this text talk about?&quot;)</li>
 <li>dependency parsing (&quot;what is the structure of the sentences in this text?&quot;)</li>
 <li>and many many more&#8230;</li>
 </ul>
+
+<br>
+<p><b>*document classification</b> is the most common NLP task at NORC -- e.g. coding of free-form survey responses, detecting topics or sentiment in social media posts</p>
+
 
 </article></slide><slide class=""><hgroup><h2>what is natural language processing?</h2></hgroup><article  id="what-is-natural-language-processing-3">
 
@@ -250,7 +254,7 @@
 <li>do some preprocessing on the corpus (e.g. lowecasing, lemmatization);</li>
 <li>transform corpus into a numerical matrix (e.g. DTM, TCM);</li>
 <li>do a bunch of linear algebra over that matrix until you can either make the predictions you need to make, or view a visualization of the clustering you need to understand; and</li>
-<li>evaluate model predictions on the test/holdout set against human judgments</li>
+<li>evaluate model predictions on the test/holdout set against human judgments/labels (for supervised problems like document classification)</li>
 </ul></li>
 </ul>
 
@@ -261,52 +265,67 @@
 <ul>
 <li>most NLP tasks are <em>very computationally expensive</em> (we&#39;ll see examples later)</li>
 <li>high-level languages like Python and R are great for exploring data and deploying small- to medium-scale models</li>
-<li>but when speed is crucial (e.g. question-answering), models are usually implemented in lower-level languages like Java or C++ (e.g. <code>word2vec</code> is implemented in C++; <code>GloVe</code> is implemented in Java)</li>
+<li>but reference implementations are often written in lower-level languages -- e.g. both <a href='https://code.google.com/archive/p/word2vec/' title=''><code>word2vec</code></a> and <a href='https://nlp.stanford.edu/projects/glove/' title=''><code>GloVe</code></a> are written in C; <a href='https://stanfordnlp.github.io/CoreNLP/' title=''><code>Stanford CoreNLP</code></a> is in Java </li>
+<!-- FIXED ERROR IN ORIGINAL PRES (FEB/2019) <li>but when speed is crucial (e.g. question-answering), models are usually implemented in lower-level languages like Java or C++ (e.g. <code>word2vec</code> is implemented in C++; <code>GloVe</code> is implemented in Java)</li> -->
 </ul>
 
-<p>Today we&#39;ll just look at modern tooling for Python and R</p>
+<br>
+<p>Today we&#39;ll just look at modern tooling for Python and R
+  <ul><ul>
+    <li><em>pro tip:</em> you can usually search github and find nice/convenient Python bindings to important algorithms implemented in other languages </li> 
+  </ul></ul>
+</p>
 
 </article></slide><slide class=""><hgroup><h2>Python or R?</h2></hgroup><article  id="python-or-r">
 
 <ul>
 <li>as of 2018, the NLP ecosystem is much more mature in Python than in R</li>
 <li>R&#39;s memory management system makes it less than ideal for large-scale text analysis endeavors</li>
-<li><strong>BUT</strong> recent NLP packages for R are <code>Rcpp::</code>-based extensions, and thus can overcome some of R&#39;s limitations (especially if you are using a high-performance machine or parallel processing)</li>
+<li><strong>BUT</strong> some recent R packages for NLP are written largely in C++ or <code>Rcpp::</code>, and are shockingly fast/efficient -- something worth keeping an eye on (e.g. shouts to <a href='https://github.com/dselivanov/text2vec/' title=''><code>text2vec::</code></a>)</li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Workflow</h2></hgroup><article  id="workflow">
+<br><br>
+<p><b>bottom line</b>: if you'll be dealing with more than a few MB of text, use Python</p>
 
-<p>My workflow is usually the following:</p>
 
-<ul>
-<li>use R to get a feel for a subset of the data (visualization, summary statistics)</li>
-<li>use Python to develop + select a model</li>
-<li>use Python to apply selected model to corpus (writing predictions to a file)</li>
+
+</article></slide><slide class=""><hgroup><h2>workflow</h2></hgroup><article  id="workflow">
+
+<p>For simple text classification problems, a nice workflow might be (informally):</p>
+
+<ol>
+<li>use R to explore a sample of your corpus (visualization, summary statistics)</li>
+<li>use Python to build preprocessing pipeline, develop, select, and train model</li>
+<li>use Python to apply model to documents, record predictions</li>
 <li>use R to evaluate model performance, visualize, and report results (<code>.Rmd</code>/<code>ggplot2::</code>)</li>
-</ul>
+</ol>
 
-<p><strong>NOTE</strong>: if you haven&#39;t yet, check out R Studio&#39;s new <code>reticulate::</code> package &#8211; makes it easy to integrate Python and R in a single workflow</p>
+<br>
+<p><strong>NOTE</strong>: Jupyter Notebooks make this approach smoother than you might expect!</p>
 
-</article></slide><slide class=""><hgroup><h2>Python NLP tools (see also <a href='https://pypi.python.org/pypi?%3Aaction=search&amp;term=natural+language+processing&amp;submit=search' title=''>PyPI index</a>)</h2></hgroup><article  id="python-nlp-tools-see-also-pypi-index">
+<p><strong>NOTE</strong>: or if you want to stay in the R Studio ecosystem, check out their new <code>reticulate::</code> package &#8211; makes it easy to integrate Python and R into a single workflow (also smoother than you might expect)</p> 
+
+</article></slide><slide class=""><hgroup><h2>Python NLP tools (see also <a href='https://pypi.python.org/pypi?%3Aaction=search&amp;term=natural+language+processing&amp;submit=search' title=''>NLP trove classifier on PyPI</a>)</h2></hgroup><article  id="python-nlp-tools-see-also-pypi-index">
 
 <h4>NLTK</h4>
 
 <ul>
-<li>tried and true &#8211; contains lots of corpora and datasets</li>
-<li>implements symbolic and statistical models (unique in this respect)</li>
+<li>tried and true &#8211; contains lots of corpora and datasets too</li>
+<li>implements statistical <em>and symbolic</em> models (unique in this respect)</li>
+<li>feels/smells old, originally designed as a teaching resource</li>
 </ul>
 
 <h4>gensim</h4>
 
 <ul>
-<li>implements bleeding edge models</li>
-<li>fast and efficient &#8211; best for large-scale models</li>
+<li>implements several cutting edge models</li>
+<li>fast and efficient &#8211; good for large-scale models</li>
 </ul>
 
 <h4>spacy</h4>
 
 <ul>
-<li>nice API, easy to use, fast</li>
+<li>nice API, easy(ish) to start using, fast + efficient</li>
 <li>out of the box, <em>stuff just works</em> &#8211; but not always super flexible</li>
 </ul>
 
@@ -314,7 +333,7 @@
 
 <ul>
 <li>there are <code>sklearn</code> models designed for text &#8211; all use the <code>sklearn</code> API</li>
-<li>good starting point, and excellent for preprocessing</li>
+<li>good starting point, and excellent for preprocessing text</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>R NLP tools (see also <a href='https://cran.r-project.org/web/views/NaturalLanguageProcessing.html' title=''>CRAN NLP Task View</a>)</h2></hgroup><article  id="r-nlp-tools-see-also-cran-nlp-task-view">
@@ -322,21 +341,21 @@
 <h4>text2vec (still in beta!)       [<a href='http://text2vec.org/' title=''>homepage</a>] [<a href='https://cran.r-project.org/web/packages/text2vec/index.html' title=''>CRAN</a>]</h4>
 
 <ul>
-<li>my favorite R package for NLP: fast and clean and lightweight</li>
-<li>main goal is to provide an interface for training term embeddings (implements <code>GloVe</code> and <code>word2vec</code> in <code>RCpp::</code>) &#8211; but also provides nice <code>R6::</code> classes for key data structures like DTM&#39;s and TCM&#39;s</li>
+<li>my favorite R package for NLP: fast and clean and lightweight (sklearny API)</li>
+<li>main goal is to provide an interface for training term embeddings (implements <code>GloVe</code> and <code>word2vec</code> in <code>RCpp::</code>) &#8211; but also provides nice <code>R6::</code> classes for key data structures like DTM&#39;s and co-occurrence matrices</li>
 </ul>
 
 <h4>quanteda       [<a href='https://docs.quanteda.io/' title=''>homepage</a>] [<a href='https://cran.r-project.org/web/packages/quanteda/index.html' title=''>CRAN</a>]</h4>
 
 <ul>
-<li>a modern end-to-end framework for working with text data &#8211; has a nice interface and seems like decent performance, but hasn&#39;t gained a lot of traction in the R community</li>
+<li>a modern end-to-end framework for working with text data &#8211; has a nice interface and seems like decent performance, but hasn&#39;t gained a ton of traction in the R community</li>
 </ul>
 
 <h4>tidytext       [<a href='https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html' title=''>intro vignette</a>] [<a href='https://cran.r-project.org/web/packages/tidytext/index.html' title=''>CRAN</a>]</h4>
 
 <ul>
-<li>excellent for learning, esp. with <code>dplyr::</code> and <a href='https://www.tidytextmining.com/' title=''>Robinson &amp; Silge (2016)</a></li>
-<li>slow and therefore not a good choice for production-grade models</li>
+<li>excellent for exploration + learning, esp. w/ <code>dplyr::</code> + <a href='https://www.tidytextmining.com/' title=''>Robinson &amp; Silge (2016)</a></li>
+<li>can be slow + poor scaling so not a good choice for production-grade models</li>
 </ul>
 
 <h4>tm       [<a href='https://cran.r-project.org/web/packages/tm/vignettes/tm.pdf' title=''>intro vignette</a>] [<a href='https://cran.r-project.org/web/packages/tm/index.html' title=''>CRAN</a>]</h4>
@@ -364,19 +383,23 @@
 
 </article></slide><slide class=""><hgroup><h2>NLP project life cycle</h2></hgroup><article  id="nlp-project-life-cycle">
 
-<p>there are usually at least the following broad phases in an NLP project life cycle:</p>
+<p>there are often at least the following broad phases in an NLP project life cycle (details + steps vary wildly depending on task/context/goals):</p>
 
 <ol>
-<li><strong>data acquisition</strong>: define and obtain or construct your corpus; set aside a subset of your data ($$20-30%) for evaluation</li>
-<li><strong>preprocessing</strong>: regularize text; remove stop words and other junk; transform corpus into a format you can compute on; calculate some summary statistics do be used downstream (e.g. number of unique words, total word count)</li>
-<li><strong>model development</strong>: define your objective; select an algorithm that generates predictions you can use to measure accuracy relative to objective</li>
-<li><strong>model evaluation + selection</strong>: define a success metric (e.g. accuracy relative to human labels or some benchmark dataset)</li>
-<li><strong>model &quot;deployment&quot;</strong>: use model to generate predictions on unseen text.</li>
+<li><strong>data acquisition</strong>: define and obtain or construct your corpus (+ get labels for supervised tasks); set aside a subset (~20-40%) for evaluation</li>
+<li><strong>preprocessing</strong>: regularize text; remove stop words and other junk; transform corpus into a format you can compute on; calculate some summary statistics to be used downstream (e.g. number of unique words, total word count)</li>
+<li><strong>model development</strong>: define objective; select algorithm that generates predictions you can use to measure accuracy relative to objective; tune + select model using training data</li>
+<li><strong>model evaluation</strong>: using some appropriate metric (e.g. F1-score), measure model performance on data points not seen during training</li>
+<!-- define a success metric (e.g. accuracy relative to human labels or some benchmark dataset) -->
+<li><strong>model &quot;deployment&quot;</strong>: use model to generate predictions on unseen documents in the future (retraining/updating on some schedule).</li>
 </ol>
 
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>demo 1: Naive Bayes spam filter</h2></hgroup><article  id="demo-1-naive-bayes-spam-filter">
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>demo 1: Naive Bayes spam filter </h2><h3>[<a href='https://github.com/lefft/nlp_intro/tree/master/demos/spam_clf' title=''>materials</a>]</h3></hgroup><article  id="demo-1-naive-bayes-spam-filter">
 
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>demo 2: fun with <code>word2vec</code></h2></hgroup><article  id="demo-2-fun-with-word2vec">
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>demo 2: fun with <code>word2vec</code> </h2><h3>[<a href='https://github.com/lefft/nlp_intro/tree/master/demos/word_embeddings' title=''>materials</a>]</h3></hgroup><article  id="demo-2-fun-with-word2vec">
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>that's all for today -- thxx!</h2><h3>drop me a line if you wanna chat about project work involving text data :p</h3></hgroup><article  id="demo-2-fun-with-word2vec">
+
 
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata"> <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
 

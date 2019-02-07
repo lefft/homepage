@@ -2,7 +2,7 @@
 title: "Natural Language Processing"
 subtitle: "a brief tour of the field and some demos"
 author: "NORC Monthly Data Science Meeting"
-date: "timothy leffel // [http://lefft.xyz](http://lefft.xyz) // march28/2018"
+date: "timothy leffel // [http://lefft.xyz](http://lefft.xyz) // april05/2018"
 output: 
   ioslides_presentation:
     css: input/slides.css
@@ -12,7 +12,24 @@ output:
 ---
 
 
+<!-- 
+  ## TIM NOTE, feb06/2019: 
+    went back + fixed typos + made minor changes directly in .html file!!! the source .rmd does ***not*** reflect these changes! be aware if ever reusing parts of these slides... less than great but recentish changes to ioslides package make rebuild break + i can't spend the time investigating today 
+
+  ## TIM NOTE, feb06/2019: 
+    fixed date in header since m latt canceled + rescheduled the original mtg/pres date (was march28, morning of pres got moved to april05) 
+
+  ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ 
+  ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ 
+  ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ ¯\_(ツ)_/¯ 
+-->
+
+
+
+
 <!-- smaller: true -->
+
+
 
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo=FALSE, eval=TRUE)
@@ -147,15 +164,25 @@ dependency parsing:
 
 - most NLP tasks are *very computationally expensive* (we'll see examples later)
 - high-level languages like Python and R are great for exploring data and deploying small- to medium-scale models
+
+
 - but when speed is crucial (e.g. question-answering), models are usually implemented in lower-level languages like Java or C++ (e.g. `word2vec` is implemented in C++; `GloVe` is implemented in Java)
 
+but reference implementations are often written in lower-level languages -- e.g. both [`word2vec`](https://code.google.com/archive/p/word2vec/) and [`GloVe`](https://nlp.stanford.edu/projects/glove/) are written in C; [`Stanford CoreNLP`](https://stanfordnlp.github.io/CoreNLP/) is in Java 
+
+
 Today we'll just look at modern tooling for Python and R
+
+    - *pro tip*: you can usually search github and find nice/convenient Python bindings to important algorithms implemented in other languages
+
 
 ## Python or R? 
 
 - as of 2018, the NLP ecosystem is much more mature in Python than in R
 - R's memory management system makes it less than ideal for large-scale text analysis endeavors
-- **BUT** recent NLP packages for R are `Rcpp::`-based extensions, and thus can overcome some of R's limitations (especially if you are using a high-performance machine or parallel processing) 
+- **BUT** recent NLP packages for R are `Rcpp::`-based extensions, and thus can overcome some of R's limitations (especially if you are using a high-performance machine and/or parallelization tricks)
+
+
 
 ## Workflow 
 
